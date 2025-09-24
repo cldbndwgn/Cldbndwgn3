@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Prototype Website</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background: #f4f4f4;
+      color: #333;
+    }
+    header {
+      background: #222;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 1rem;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .hero {
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .hero h2 {
+      font-size: 2.5rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 2rem;
+    }
+    .section {
+      margin: 2rem 0;
+    }
+    .card {
+      background: white;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    form input, form textarea, form button {
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    form button {
+      background: #4facfe;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    form button:hover {
+      background: #00c6ff;
+    }
+    footer {
+      background: #222;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Website</h1>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="home">
+    <h2>Welcome to My Prototype</h2>
+    <p>This is a demo website hosted with GitHub Pages!</p>
+  </section>
+
+  <div class="container">
+    <section class="section" id="about">
+      <h2>About</h2>
+      <div class="card">
+        <p>Hello! This is my prototype website built using HTML and CSS. You can add your own features here like projects, blogs, or portfolio items.</p>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <h2>Contact Me</h2>
+      <form>
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea placeholder="Your Message" rows="5" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 My Prototype Website | Powered by GitHub Pages</p>
+  </footer>
+</body>
+</html>
