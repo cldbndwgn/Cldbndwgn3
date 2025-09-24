@@ -1,122 +1,856 @@
-<!DOCTYPE html>
+      <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Prototype Website</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      background: #f4f4f4;
-      color: #333;
-    }
-    header {
-      background: #222;
-      color: #fff;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin: 0 1rem;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    .hero {
-      background: linear-gradient(to right, #4facfe, #00f2fe);
-      color: white;
-      padding: 4rem 2rem;
-      text-align: center;
-    }
-    .hero h2 {
-      font-size: 2.5rem;
-    }
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 2rem;
-    }
-    .section {
-      margin: 2rem 0;
-    }
-    .card {
-      background: white;
-      padding: 1.5rem;
-      margin: 1rem 0;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    form input, form textarea, form button {
-      width: 100%;
-      margin: 0.5rem 0;
-      padding: 0.8rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    form button {
-      background: #4facfe;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    form button:hover {
-      background: #00c6ff;
-    }
-    footer {
-      background: #222;
-      color: #fff;
-      text-align: center;
-      padding: 1rem;
-      margin-top: 2rem;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CLDBNDWGN — Hacking Learning Hub</title>
+
+<!-- Typewriter-style mono font -->
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#000;
+    --panel:#071617;
+    --muted:#7fe6b7;
+    --neon:#00e28a;
+    --cyan:#18b0ff;
+    --glass: rgba(255,255,255,0.03);
+    --card:#041918;
+    --radius:12px;
+    --mono: 'Share Tech Mono', monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#000,#021214);color:var(--neon);font-family:var(--mono);-webkit-font-smoothing:antialiased}
+  /* matrix canvas sits in background */
+  canvas#matrix { position:fixed;inset:0;z-index:0;display:block; }
+  /* page container */
+  .app { position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column; }
+  header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(0,255,138,0.04);background:linear-gradient(180deg, rgba(0,0,0,0.12), transparent)}
+  .brand {display:flex;align-items:center;gap:12px}
+  .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--neon),var(--cyan));display:flex;align-items:center;justify-content:center;color:#001;font-weight:900}
+  .title{font-size:18px;font-weight:900}
+  .subtitle{font-size:11px;color:rgba(255,255,255,0.6)}
+  .actions{display:flex;gap:8px;align-items:center}
+  .btn{padding:8px 10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;cursor:pointer}
+  .btn-primary{background:linear-gradient(90deg,var(--neon),var(--cyan));color:#012; border:none}
+  main{display:flex;gap:12px;padding:12px;align-items:flex-start;flex-wrap:wrap}
+  nav.side{width:72px;display:flex;flex-direction:column;gap:10px;align-items:center;z-index:3}
+  .navbtn{width:52px;height:52px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .navbtn.active{box-shadow:0 4px 18px rgba(0,255,138,0.06);border-color:rgba(0,255,138,0.18)}
+  .container{flex:1 1 auto;display:flex;flex-direction:column;gap:12px;z-index:3;min-width:280px}
+  .panel{display:none;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.02)}
+  .panel.active{display:block}
+  .toprow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .flexrow{display:flex;gap:8px;align-items:center}
+  h2{margin:0;color:var(--cyan)}
+  p.small{color:rgba(255,255,255,0.65);font-size:13px}
+  /* lists */
+  .fun-list {max-height:320px;overflow:auto;padding:10px;border-radius:10px;background:var(--card);border:1px solid rgba(0,255,138,0.03)}
+  .fun-item{padding:8px;border-bottom:1px dashed rgba(255,255,255,0.02)}
+  /* flashcards */
+  .flash-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .flash-card{background:var(--card);padding:12px;border-radius:10px;min-height:110px;border:1px solid rgba(0,255,138,0.03);cursor:pointer;display:flex;flex-direction:column;justify-content:center;transition:transform .12s}
+  .flash-card:active{transform:scale(.995)}
+  .flash-card .back{display:none;color:var(--muted);font-size:13px;margin-top:8px}
+  .flash-card.flipped .front{display:none}
+  .flash-card.flipped .back{display:block}
+  /* quiz */
+  .quiz-question{margin:12px 0;padding:12px;border-radius:10px;background:#021617;border:1px solid rgba(0,255,138,0.03)}
+  .option{display:block;margin:6px 0;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);cursor:pointer;text-align:left}
+  .option.correct{outline:2px solid limegreen}
+  .option.wrong{outline:2px solid #ff4365}
+  /* tools grid */
+  .tools-grid{display:grid;grid-template-columns:1fr;gap:10px}
+  .tool{background:#031617;padding:10px;border-radius:10px;border:1px solid rgba(0,255,138,0.03)}
+  .terminal{background:#021617;padding:12px;border-radius:10px;border:1px solid rgba(0,255,138,0.03);min-height:120px;color:var(--neon);font-family:var(--mono);overflow:auto}
+  .term-input{display:flex;gap:8px;margin-top:8px}
+  .term-input input{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+  .memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .mem-card{background:#021818;border-radius:8px;padding:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(255,255,255,0.02);min-height:60px;font-size:20px}
+  .achievements{display:flex;gap:8px;flex-wrap:wrap}
+  .ach{padding:8px;border-radius:8px;background:#011616;border:1px solid rgba(0,255,138,0.03)}
+  footer{padding:8px;color:var(--muted);font-size:12px;background:linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.04));border-top:1px solid rgba(255,255,255,0.02)}
+  .log{max-height:64px;overflow:auto}
+  input,textarea,select,button{font-family:var(--mono)}
+  .small{font-size:12px;color:var(--muted)}
+  .ad-box{background:#041818;border-radius:8px;border:1px dashed rgba(0,255,138,0.06);padding:14px;text-align:center;color:var(--muted)}
+  /* responsive */
+  @media(min-width:900px){ .flash-grid{grid-template-columns:repeat(4,1fr)} .tools-grid{grid-template-columns:repeat(2,1fr)} .memory-grid{grid-template-columns:repeat(6,1fr)} }
+  @media(max-width:700px){ nav.side{display:flex;flex-direction:row;width:100%;justify-content:space-around} .container{min-width:unset} }
+</style>
 </head>
 <body>
+<canvas id="matrix"></canvas>
+
+<div class="app">
   <header>
-    <h1>My Website</h1>
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </nav>
+    <div class="brand">
+      <div class="logo">CL</div>
+      <div>
+        <div class="title">CLDBNDWGN</div>
+        <div class="subtitle">Free Ethical Hacking Learning Hub</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div id="userLabel" class="small">guest</div>
+      <button class="btn" id="openAuthBtn">Sign in</button>
+      <button class="btn" id="openProfileBtn">Profile</button>
+      <button class="btn-primary" id="openQuizBtn">Quiz</button>
+    </div>
   </header>
 
-  <section class="hero" id="home">
-    <h2>Welcome to My Prototype</h2>
-    <p>This is a demo website hosted with GitHub Pages!</p>
-  </section>
+  <main>
+    <nav class="side" aria-label="Main navigation">
+      <button class="navbtn active" data-panel="panel-home" title="Home">⌁</button>
+      <button class="navbtn" data-panel="panel-lessons" title="Lessons">L</button>
+      <button class="navbtn" data-panel="panel-flash" title="Flashcards">F</button>
+      <button class="navbtn" data-panel="panel-fun" title="Funfacts">★</button>
+      <button class="navbtn" data-panel="panel-games" title="Games">G</button>
+      <button class="navbtn" data-panel="panel-tools" title="Tools">T</button>
+      <button class="navbtn" data-panel="panel-history" title="About">?</button>
+    </nav>
 
-  <div class="container">
-    <section class="section" id="about">
-      <h2>About</h2>
-      <div class="card">
-        <p>Hello! This is my prototype website built using HTML and CSS. You can add your own features here like projects, blogs, or portfolio items.</p>
+    <section class="container">
+
+      <!-- HOME -->
+      <div id="panel-home" class="panel active">
+        <div class="toprow">
+          <div>
+            <h2>Welcome to CLDBNDWGN</h2>
+            <div class="small">Ethics-first hacking learning. Practice in safe labs only.</div>
+          </div>
+          <div class="flexrow">
+            <button class="btn" id="startJourney">Start Lessons</button>
+            <button class="btn" id="genNameBtn">Gen Name</button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:260px">
+            <div style="font-weight:900;margin-bottom:8px">Quick Funfacts</div>
+            <div class="fun-list" id="quickFunList"></div>
+          </div>
+
+          <div style="width:320px;min-width:240px">
+            <div style="font-weight:900;margin-bottom:8px">Terminal</div>
+            <div class="terminal" id="miniTerm" aria-live="polite"></div>
+            <div class="term-input">
+              <input id="miniCmd" placeholder='Try "help"'>
+              <button class="btn" id="miniSend">Send</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div style="font-weight:900">Hacker Alias</div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <input id="hackerName" placeholder="Press Generate" readonly style="flex:1;padding:10px;border-radius:8px;background:#001;border:1px solid rgba(255,255,255,0.04)">
+            <button class="btn-primary" id="genName">Generate</button>
+          </div>
+          <div class="small" style="margin-top:8px">Use as alias for badges and leaderboard (local only).</div>
+        </div>
       </div>
-    </section>
 
-    <section class="section" id="contact">
-      <h2>Contact Me</h2>
-      <form>
-        <input type="text" placeholder="Your Name" required>
-        <input type="email" placeholder="Your Email" required>
-        <textarea placeholder="Your Message" rows="5" required></textarea>
-        <button type="submit">Send</button>
-      </form>
+      <!-- LESSONS -->
+      <div id="panel-lessons" class="panel">
+        <h2>Lessons</h2>
+        <div class="small" style="margin-top:8px">Follow modules in order. This is an educational, ethics-first guide.</div>
+        <ol style="margin-top:12px;color:var(--muted)">
+          <li><strong>Intro to Ethical Hacking</strong> — scope & rules.</li>
+          <li><strong>Networking Basics</strong> — IP, TCP/UDP, ports.</li>
+          <li><strong>Linux Essentials</strong> — permissions, SSH.</li>
+          <li><strong>Web Security</strong> — XSS, SQLi basics.</li>
+          <li><strong>Recon & Scanning</strong> — safe Nmap usage.</li>
+          <li><strong>Intro to Exploitation</strong> — concepts only.</li>
+          <li><strong>Defense & Hardening</strong> — logging & patching.</li>
+        </ol>
+        <div style="margin-top:12px"><button class="btn" id="openLesson1">Open Lesson 1</button></div>
+      </div>
+
+      <!-- FLASHCARDS -->
+      <div id="panel-flash" class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h2>Flashcards</h2>
+            <div class="small">Click to flip. Progress saved locally.</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="searchFlash" class="small" placeholder="Search flashcards">
+            <button class="btn" id="shuffleFlash">Shuffle</button>
+            <button class="btn" id="exportFlash">Export</button>
+            <button class="btn" id="importFlash">Import</button>
+          </div>
+        </div>
+
+        <div class="flash-grid" id="flashGrid" style="margin-top:12px"></div>
+        <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center">
+          <div id="flashProgress" class="small">0 / 100 flipped</div>
+          <div style="display:flex;gap:8px"><button class="btn" id="prevPage">Prev</button><button class="btn" id="nextPage">Next</button></div>
+        </div>
+      </div>
+
+      <!-- FUNFACTS -->
+      <div id="panel-fun" class="panel">
+        <h2>Funfacts</h2>
+        <div class="fun-list" id="funList" style="margin-top:10px"></div>
+      </div>
+
+      <!-- GAMES -->
+      <div id="panel-games" class="panel">
+        <h2>Mini-games & Challenges</h2>
+
+        <div style="margin-top:12px">
+          <h3 style="margin:0 0 6px 0">Memory Match</h3>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><button class="btn" id="memRestart">Restart</button><div class="small" id="memInfo">Find pairs</div></div>
+          <div class="memory-grid" id="memoryGrid"></div>
+        </div>
+
+        <div style="margin-top:16px">
+          <h3 style="margin:0 0 6px 0">Typing Test (15s)</h3>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><button class="btn" id="startTyping">Start</button><div class="small" id="typingInfo"></div></div>
+          <input id="typingInput" placeholder="Type here..." disabled style="width:100%;padding:8px">
+        </div>
+      </div>
+
+      <!-- TOOLS -->
+      <div id="panel-tools" class="panel">
+        <h2>Tools</h2>
+        <div class="tools-grid" style="margin-top:12px">
+          <div class="tool">
+            <div style="font-weight:900">Password Generator</div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <input id="pwLen" type="number" min="6" max="30" value="12" style="width:120px">
+              <button class="btn" id="genPw">Generate</button>
+            </div>
+            <input id="pwOut" readonly style="margin-top:8px">
+            <button class="btn" id="copyPw">Copy</button>
+          </div>
+
+          <div class="tool">
+            <div style="font-weight:900">Base64 Encode / Decode</div>
+            <textarea id="b64in" placeholder="Text..." style="height:80px;margin-top:8px"></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" id="encB64">Encode</button>
+              <button class="btn" id="decB64">Decode</button>
+            </div>
+            <textarea id="b64out" readonly style="height:80px;margin-top:8px"></textarea>
+          </div>
+
+          <div class="tool">
+            <div style="font-weight:900">Text Reverser</div>
+            <input id="revIn" placeholder="Enter text" style="margin-top:8px">
+            <button class="btn" id="revBtn">Reverse</button>
+            <input id="revOut" readonly style="margin-top:8px">
+          </div>
+
+          <div class="tool">
+            <div style="font-weight:900">Random Hacker Name</div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" id="genNameTool">Generate</button>
+              <button class="btn" id="copyName">Copy</button>
+            </div>
+            <input id="nameOut" readonly style="margin-top:8px">
+            <div class="small" style="margin-top:6px">Alias generator (local only)</div>
+          </div>
+
+          <div class="tool">
+            <div style="font-weight:900">Countdown Timer</div>
+            <input id="timerSec" type="number" value="30" min="5" style="width:120px;margin-top:8px">
+            <div style="display:flex;gap:8px;margin-top:8px"><button class="btn" id="startTimer">Start</button><button class="btn" id="stopTimer">Stop</button></div>
+            <div class="small" id="timerDisplay" style="margin-top:8px">00:00</div>
+          </div>
+
+          <!-- AD placeholder (demo) -->
+          <div class="tool">
+            <div style="font-weight:900">Ad (demo)</div>
+            <div class="ad-box" style="margin-top:8px">[ AD SLOT — Demo Placeholder ]</div>
+            <div class="small" style="margin-top:8px">Replace with your AdSense snippet (when ready)</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ABOUT / SAFETY -->
+      <div id="panel-history" class="panel">
+        <h2>About & Safety</h2>
+        <div style="margin-top:10px;color:var(--muted);line-height:1.45">
+          <p><strong>CLDBNDWGN</strong> is for learning and practicing defensive cybersecurity. Always obtain permission before testing systems you do not own.</p>
+          <p>All data (progress, profiles) are stored locally in your browser — nothing is sent to a server.</p>
+        </div>
+      </div>
+
+      <!-- ACHIEVEMENTS -->
+      <div id="panel-achieve" class="panel">
+        <h2>Achievements</h2>
+        <div style="margin-top:10px">
+          <div class="achievements" id="achList"></div>
+        </div>
+      </div>
+
     </section>
-  </div>
+  </main>
 
   <footer>
-    <p>&copy; 2025 My Prototype Website | Powered by GitHub Pages</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div class="log" id="sysLog">[SYS] CLDBNDWGN Ready.</div>
+      <div class="small" id="footerRight">Local demo • No server • Save in browser</div>
+    </div>
   </footer>
+</div>
+
+<!-- QUIZ OVERLAY -->
+<div id="quizOverlay" style="display:none;position:fixed;inset:0;z-index:60;align-items:center;justify-content:center;padding:16px;background:linear-gradient(180deg, rgba(0,0,0,0.86), rgba(0,0,0,0.98))">
+  <div id="quizBox" style="width:100%;max-width:920px;background:#021617;border-radius:12px;padding:14px;border:1px solid rgba(0,255,138,0.06)"></div>
+</div>
+
+<!-- AUTH MODAL -->
+<div id="authModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:70;align-items:center;justify-content:center">
+  <div style="background:#021617;padding:16px;border-radius:12px;border:1px solid rgba(0,255,138,0.06);width:94%;max-width:420px">
+    <h3 style="margin:0 0 8px 0">Sign in / Sign up (demo)</h3>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <input id="authEmail" placeholder="Email">
+      <input id="authUser" placeholder="Username">
+      <input id="authPass" type="password" placeholder="Password">
+      <div style="display:flex;gap:8px">
+        <button class="btn-primary" id="authSignUp">Sign up</button>
+        <button class="btn" id="authSignIn">Sign in</button>
+        <button class="btn" id="authClose">Close</button>
+      </div>
+      <div class="small" id="authMsg" style="color:var(--muted)"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================
+   CLDBNDWGN — single-file app
+   ========================= */
+
+/* ---------- Utilities ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const randInt = n => Math.floor(Math.random()*n);
+const shuffle = arr => { const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a; }
+function saveJSON(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+function loadJSON(k,def){ try{ return JSON.parse(localStorage.getItem(k)||'null')||def }catch(e){return def} }
+
+/* ---------- Data ---------- */
+/* 100 funfacts (short); you can expand/change them later */
+const FUNFACTS = [
+"1972 — Pong popularized arcade gaming.",
+"1978 — Space Invaders sparked arcade culture.",
+"1980 — Pac-Man became a cultural icon.",
+"1983 — The video game crash reshaped the industry.",
+"1985 — NES revived home video games.",
+"1985 — Super Mario Bros. set platforming standards.",
+"1989 — SimCity popularized sandbox gameplay.",
+"1991 — Sonic brought speed to platformers.",
+"1993 — Doom popularized FPS games.",
+"1994 — PlayStation expanded CD-based games.",
+"1996 — Pokémon created a global media franchise.",
+"1997 — Final Fantasy VII raised cinematic JRPGs.",
+"1998 — Half-Life advanced storytelling in FPS.",
+"1999 — EverQuest defined early MMORPGs.",
+"2001 — Halo set modern console FPS controls.",
+"2004 — WoW dominated MMO subscriptions.",
+"2006 — Wii introduced motion controls.",
+"2009 — Minecraft began as an indie success.",
+"2013 — GTA V pushed production values in open worlds.",
+"2016 — Pokémon Go brought AR into mainstream gaming.",
+"2018 — Fortnite popularized battle royale.",
+"1990 — Tetris is one of the most-ported games.",
+"1981 — Donkey Kong introduced Mario (Jumpman).",
+"1992 — Wolfenstein 3D shaped early FPS design.",
+"1991 — Street Fighter II defined fighting game rules.",
+"2007 — BioShock combined theme and mechanics.",
+"2014 — Dark Souls influenced many 'soulslike' titles.",
+"2009 — League of Legends popularized MOBA esports.",
+"2005 — Shadow of the Colossus explored scale & feeling.",
+"1994 — Donkey Kong Country impressed with visuals.",
+"2003 — Resident Evil 4 redefined action-horror.",
+"1998 — Metal Gear Solid fused stealth and cinema.",
+"2012 — Journey showed minimalist emotional design.",
+"2010 — Red Dead Redemption advanced open-world narrative.",
+"2011 — Dark Souls cultivated hardcore communities.",
+"2017 — Breath of the Wild reinvented open-world mechanics.",
+"1998 — StarCraft became an esports pillar in Korea.",
+"2003 — Beyond Good & Evil gained cult status.",
+"2016 — Overwatch revitalized hero-based shooters.",
+"2015 — The Witcher 3 set narrative benchmarks.",
+"1996 — Resident Evil defined survival horror tropes.",
+"2003 — Call of Duty began cinematic multiplayer evolution.",
+"2006 — Oblivion highlighted modding & emergent play.",
+"1990 — Wing Commander raised cinematic space combat.",
+"1982 — Pitfall! was an influential platformer.",
+"1995 — Chrono Trigger praised for branching endings.",
+"2007 — Portal brought brilliant puzzle design and writing.",
+"2009 — Batman: Arkham blended combat & detective design.",
+"2013 — The Last of Us raised emotional storytelling.",
+"2000 — The Sims opened life-sim audiences.",
+"2012 — Dishonored blended systems with stealth.",
+"2016 — Stardew Valley showed single-dev success.",
+"2008 — Braid influenced indie narrative & craft.",
+"2014 — Shovel Knight revived retro platformers.",
+"1991 — Monkey Island set standards for witty adventure writing.",
+"1991 — Civilization popularized deep turn-based strategy.",
+"2001 — ICO used companion-driven puzzle design.",
+"1984 — Elite pioneered procedural space sim systems.",
+"2019 — Sekiro innovated posture-based combat.",
+"2000 — Deus Ex merged RPG, stealth & shooter systems.",
+"2018 — God of War reimagined narrative and character.",
+"2010 — Limbo influenced indie art direction.",
+"2008 — Left 4 Dead used an AI Director for pacing.",
+"1997 — GoldenEye 007 influenced console multiplayer.",
+"2005 — Guitar Hero popularized rhythm peripherals.",
+"2010 — Mass Effect 2 refined character-driven RPG choices.",
+"1994 — Warcraft II helped LAN RTS growth.",
+"1999 — System Shock 2 influenced immersive sims.",
+"1980 — Zork is a classic interactive fiction title.",
+"1992 — Alone in the Dark mixed horror with 3D exploration.",
+"2009 — Borderlands introduced looter-shooter mixing.",
+"2017 — PUBG launched modern battle royale trend.",
+"2006 — Okami stood out with artful design.",
+"1994 — Command & Conquer popularized accessible RTS mechanics.",
+"2001 — GTA III set open-world urban templates.",
+"2003 — Half-Life 2 advanced physics in gameplay.",
+"1998 — Star Fox used special chips for 3D effects.",
+"1987 — Metal Gear ushered stealth into action.",
+"2012 — Journey showcased emotional communication without words.",
+"1995 — Tekken advanced 3D fighting mechanics.",
+"2014 — Dark Souls II/III inspired many 'soulslikes'.",
+"1990 — Super Mario World expanded map-based design.",
+"2000 — Counter-Strike fostered competitive shooter communities",
+"2003 — Resident Evil 4 influenced camera & action designs",
+"2016 — Uncharted 4 highlighted cinematic craft",
+"1995 — Tekken and Virtua Fighter pushed 3D fighters",
+"2004 — Half-Life 2 showed physics-driven puzzles",
+"1999 — Asheron's Call experimented with persistent worlds",
+"2013 — Gone Home highlighted personal storytelling",
+"2011 — Skyrim exploded with modding culture",
+"2002 — Battlefield emphasized vehicles and scale",
+"1998 — GoldenEye 007 proved console FPS viability",
+"2005 — Shadow of the Colossus explored scale and sorrow",
+"2007 — Portal combined mechanics with writing",
+"2019 — Sekiro showcased precision combat design",
+"2011 — Dark Souls built resilience around difficulty"
+];
+
+/* Flashcards (100) created from funfacts */
+const FLASHCARDS = FUNFACTS.slice(0,100).map((t,i)=>({
+  id:'f'+(i+1),
+  front:`Card ${i+1}: ${t.split('—')[0].trim()}`,
+  back:`${t} — Tip: Research this topic for deeper learning.`
+}));
+
+/* 30 quiz Qs (real short gaming/hacking-themed) */
+const QUIZ = [
+  {q:"Which 1972 game popularized arcade gaming?", options:["Pong","Space Invaders","Pac-Man","Asteroids"], a:0},
+  {q:"What console revived home gaming in 1985?", options:["Atari 7800","NES","Sega Master","Vectrex"], a:1},
+  {q:"Which game popularized the first-person shooter genre (1993)?", options:["Doom","Quake","Wolfenstein","Duke Nukem"], a:0},
+  {q:"Which indie game became huge from 2009 onwards?", options:["Terraria","Minecraft","Starbound","Roblox"], a:1},
+  {q:"Which game introduced motion controls to mainstream (2006)?", options:["PS3","Xbox 360","Wii","DS"], a:2},
+  {q:"Which game mixed MMO elements into a shooter and launched in 2014?", options:["Destiny","Overwatch","Apex Legends","Fortnite"], a:0},
+  {q:"Which mobile game popularized AR in 2016?", options:["Ingress","Pokémon Go","Zombies Run","Harry Potter AR"], a:1},
+  {q:"Which 1980 game became a massive cultural icon?", options:["Pong","Pac-Man","Space Invaders","Centipede"], a:1},
+  {q:"Which 1997 RPG moved cinematic storytelling to mainstream audiences?", options:["Final Fantasy VII","Chrono Cross","Xenogears","Suikoden"], a:0},
+  {q:"What is considered a defensive cybersecurity practice?", options:["Scanning random servers","Responsible disclosure","Doxing rivals","Password reuse"], a:1},
+  {q:"Which technique is an example of a web attack?", options:["XSS","SSH tunneling","SSL pinning","Rate limiting"], a:0},
+  {q:"Which tool is used for network scanning?", options:["Nmap","Photoshop","Excel","VSCode"], a:0},
+  {q:"Which practice helps secure accounts?", options:["Use same password everywhere","Use multi-factor auth","Share passwords with friends","Use short passwords"], a:1},
+  {q:"What does 'phishing' usually try to steal?", options:["Physical devices","Credentials","Graphics","Music"], a:1},
+  {q:"Which is a safe place to practice hacking skills?", options:["Random public servers","Authorized labs / CTFs","Banks","Government servers"], a:1},
+  {q:"Which language is common for web scripting?", options:["HTML","CSS","JavaScript","SQL"], a:2},
+  {q:"Which concept is part of Linux basics?", options:["Registry","Processes","Storyboard","Timeline"], a:1},
+  {q:"What does 'XSS' stand for?", options:["Cross-Site Scripting","Cross Server Script","XML Secure Service","None"], a:0},
+  {q:"Which console generation introduced SSDs (2020+)?", options:["PS3","PS4","PS5","PS2"], a:2},
+  {q:"What is a common hashed format for passwords?", options:["MD5","PNG","MP3","HTML"], a:0},
+  {q:"Which game is known for open sandbox building?", options:["Minecraft","Tetris","Pong","Pac-Man"], a:0},
+  {q:"Which is a valid base64 encoding example use?", options:["Encoding binary to text","Formatting CSS","Compressing images","Routing traffic"], a:0},
+  {q:"Which file contains webpage structure?", options:["index.html","styles.css","script.js","data.json"], a:0},
+  {q:"Which is ethical when testing security?", options:["Get permission","Exploit without notice","Publish sensitive data","Ignore owners"], a:0},
+  {q:"Which is not a strong password practice?", options:["Use long passphrases","Share passwords","Use unique passwords","Use a password manager"], a:1},
+  {q:"Which describes 'reconnaissance' in pentesting?", options:["Gathering info","Destroying systems","Stealing money","Reporting to press"], a:0},
+  {q:"Which is a UI/UX design principle?", options:["Color contrast","Use tiny unreadable fonts","Hide navigation","Force popups"], a:0},
+  {q:"Which is a helpful dev tool for HTTP debugging?", options:["Wireshark","Photoshop","Spotify","Slack"], a:0},
+  {q:"What is a common first step in creating a web app?", options:["Write docs","Plan UI","Hack a server","Publish password"], a:1}
+];
+
+/* ---------- Local storage keys & state ---------- */
+const KEY_USERS = 'cl_users_v1';
+const KEY_PROGRESS = 'cl_progress_v1';
+const KEY_ACH = 'cl_ach_v1';
+const KEY_LB = 'cl_lb_v1';
+
+let users = loadJSON(KEY_USERS, {});
+let progress = loadJSON(KEY_PROGRESS, {flipped:{}, quizBest:0});
+let achievements = loadJSON(KEY_ACH, {flippedAll:false, quizDone:false});
+let leaderboard = loadJSON(KEY_LB, []);
+
+/* ---------- UI Wiring ---------- */
+/* Navigation */
+$$('.navbtn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    $$('.navbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const panelId = btn.dataset.panel;
+    $$('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById(panelId).classList.add('active');
+  });
+});
+
+/* Quick Funfacts */
+function renderQuickFun(){
+  $('#quickFunList').innerHTML = FUNFACTS.slice(0,6).map(f=>`<div style="padding:8px;border-radius:8px;background:#021818;margin-bottom:6px">${f}</div>`).join('');
+}
+renderQuickFun();
+
+/* Funfacts list */
+function renderFunList(){ $('#funList').innerHTML = FUNFACTS.map((f,i)=>`<div class="fun-item"><strong>${i+1}.</strong> ${f}</div>`).join(''); }
+renderFunList();
+
+/* Flashcards rendering/pagination */
+let filteredCards = FLASHCARDS.slice();
+let page = 0, PAGE_SIZE = 8;
+function renderFlash(){
+  const start = page * PAGE_SIZE;
+  const slice = filteredCards.slice(start, start + PAGE_SIZE);
+  $('#flashGrid').innerHTML = slice.map(card=>`
+    <div class="flash-card" id="${card.id}" data-id="${card.id}">
+      <div class="front">${card.front}</div>
+      <div class="back">${card.back}</div>
+    </div>
+  `).join('');
+  $$('.flash-card').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      el.classList.toggle('flipped');
+      const id = el.dataset.id;
+      progress.flipped[id] = !!el.classList.contains('flipped');
+      saveJSON(KEY_PROGRESS, progress);
+      updateFlashProgress();
+      checkAchievementFlipAll();
+    });
+    if(progress.flipped[el.dataset.id]) el.classList.add('flipped');
+  });
+  updateFlashProgress();
+}
+renderFlash();
+
+$('#searchFlash').addEventListener('input', e=>{
+  const q = e.target.value.trim().toLowerCase();
+  filteredCards = FLASHCARDS.filter(c => c.front.toLowerCase().includes(q) || c.back.toLowerCase().includes(q));
+  page = 0;
+  renderFlash();
+});
+$('#shuffleFlash').addEventListener('click', ()=>{ filteredCards = shuffle(filteredCards); page = 0; renderFlash(); });
+$('#exportFlash').addEventListener('click', ()=>{ const blob = new Blob([JSON.stringify(FLASHCARDS,null,2)],{type:'application/json'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='flashcards.json'; a.click(); URL.revokeObjectURL(url); });
+$('#importFlash').addEventListener('click', ()=>{ const ip = document.createElement('input'); ip.type='file'; ip.accept='application/json'; ip.onchange=(e)=>{ const f=e.target.files[0]; const r=new FileReader(); r.onload=()=>{ try{ const data=JSON.parse(r.result); if(Array.isArray(data)){ filteredCards = data.map((it,idx)=> typeof it==='object' ? it : {id:'f'+(idx+1), front:String(it), back:''}); page=0; renderFlash(); alert('Imported flashcards'); } else alert('Invalid file'); }catch(err){alert('Invalid JSON');}}; r.readAsText(f); }; ip.click(); });
+
+$('#prevPage').addEventListener('click', ()=>{ if(page>0){ page--; renderFlash(); }});
+$('#nextPage').addEventListener('click', ()=>{ if((page+1)*PAGE_SIZE < filteredCards.length){ page++; renderFlash(); }});
+
+/* progress display */
+function updateFlashProgress(){
+  const count = Object.keys(progress.flipped).filter(k=>progress.flipped[k]).length;
+  $('#flashProgress').textContent = `${count} / ${FLASHCARDS.length} flipped`;
+}
+
+/* achievements */
+function addAchievement(text){
+  const a = document.createElement('div'); a.className='ach'; a.textContent = text;
+  $('#achList').appendChild(a);
+  logSys(`[ACH] ${text}`);
+}
+function renderAchievements(){
+  $('#achList').innerHTML = '';
+  if(achievements.flippedAll) addAchievement('Flipped all flashcards');
+  if(achievements.quizDone) addAchievement('Completed 30-Q Quiz');
+}
+renderAchievements();
+
+function checkAchievementFlipAll(){
+  const count = Object.keys(progress.flipped).filter(k=>progress.flipped[k]).length;
+  if(count >= FLASHCARDS.length && !achievements.flippedAll){
+    achievements.flippedAll = true; saveJSON(KEY_ACH, achievements); addAchievement('Flipped all flashcards');
+  }
+}
+
+/* ---------- Quiz overlay ---------- */
+let quizIndex = 0, quizScore = 0;
+$('#openQuizBtn').addEventListener('click', ()=> openQuiz());
+
+function openQuiz(){
+  quizIndex = 0; quizScore = 0;
+  $('#quizOverlay').style.display = 'flex';
+  renderQuizQuestion();
+}
+function closeQuiz(){ $('#quizOverlay').style.display = 'none'; }
+
+function renderQuizQuestion(){
+  const q = QUIZ[quizIndex];
+  if(!q){
+    $('#quizBox').innerHTML = `<div style="font-weight:900">Quiz complete • Score: ${quizScore} / ${QUIZ.length}</div>
+      <div style="margin-top:12px;display:flex;gap:8px"><button class="btn" id="closeQuizBtn">Close</button><button class="btn-primary" id="saveScoreBtn">Save Score</button></div>`;
+    $('#closeQuizBtn').addEventListener('click', ()=>{ closeQuiz(); });
+    $('#saveScoreBtn').addEventListener('click', ()=>{ saveQuizScore(quizScore); achievements.quizDone=true; saveJSON(KEY_ACH, achievements); renderAchievements(); alert('Score saved to local leaderboard'); });
+    return;
+  }
+  $('#quizBox').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:900">Q${quizIndex+1} / ${QUIZ.length}</div><div class="small">Score: ${quizScore}</div></div>
+    <div class="question" style="margin-top:12px">${q.q}</div>
+    <div class="options" id="quizOptions">${q.options.map((o,idx)=>`<button class="option" data-idx="${idx}">${String.fromCharCode(65+idx)}. ${o}</button>`).join('')}</div>
+    <div id="quizFeedback" class="small" style="margin-top:8px;color:var(--muted)"></div>`;
+  $$('.option').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const idx = Number(btn.dataset.idx);
+      $$('.option').forEach(b=>b.disabled = true);
+      $$('.option').forEach(b=>{ const i = Number(b.dataset.idx); if(i === q.a) b.classList.add('correct'); if(i === idx && i !== q.a) b.classList.add('wrong'); });
+      if(idx === q.a){
+        $('#quizFeedback').textContent = 'Correct! Advancing...';
+        quizScore++;
+        setTimeout(()=>{ quizIndex++; renderQuizQuestion(); }, 700);
+      } else {
+        $('#quizFeedback').textContent = `Wrong. Correct: ${q.options[q.a]}. Click Next to continue.`;
+        const next = document.createElement('div'); next.style.marginTop='10px'; next.innerHTML = '<button class="btn" id="quizNext">Next</button>';
+        $('#quizBox').appendChild(next);
+        $('#quizNext').addEventListener('click', ()=>{ quizIndex++; renderQuizQuestion(); });
+      }
+    });
+  });
+}
+
+/* leaderboard */
+function saveQuizScore(score){
+  const user = sessionStorage.getItem('cl_user') || 'guest';
+  leaderboard.push({user,score,date:new Date().toISOString()});
+  leaderboard.sort((a,b)=>b.score-a.score);
+  if(leaderboard.length>50) leaderboard.length=50;
+  saveJSON(KEY_LB, leaderboard);
+  renderLeaderboard();
+}
+function renderLeaderboard(){
+  const existing = document.getElementById('leaderboardView');
+  if(existing) existing.remove();
+  const el = document.createElement('div'); el.id='leaderboardView'; el.style.marginTop='8px';
+  if(leaderboard.length===0) el.innerHTML = '<div class="small">No scores yet</div>';
+  else el.innerHTML = '<ol style="color:var(--muted)">' + leaderboard.map(it=>`<li>${it.user} — ${it.score} (${new Date(it.date).toLocaleString()})</li>`).join('') + '</ol>';
+  document.getElementById('panel-achieve').appendChild(el);
+}
+renderLeaderboard();
+
+/* ---------- Terminal ---------- */
+function appendTermLine(txt){ const t = document.createElement('div'); t.textContent = txt; $('#miniTerm').appendChild(t); $('#miniTerm').scrollTop = $('#miniTerm').scrollHeight; }
+appendTermLine('[terminal] Ready. Type "help".');
+
+$('#miniSend').addEventListener('click', ()=>{ const cmd = $('#miniCmd').value.trim(); if(!cmd) return; appendTermLine('> '+cmd); handleTerminal(cmd); $('#miniCmd').value=''; });
+function handleTerminal(cmd){
+  const c = cmd.split(' ')[0].toLowerCase();
+  if(c==='help'){ appendTermLine('help • quiz • flash • fun • games • achievements • clear • name'); }
+  else if(c==='quiz'){ openQuiz(); }
+  else if(c==='flash'){ document.querySelector('.navbtn[data-panel="panel-flash"]').click(); }
+  else if(c==='fun'){ document.querySelector('.navbtn[data-panel="panel-fun"]').click(); }
+  else if(c==='games'){ document.querySelector('.navbtn[data-panel="panel-games"]').click(); }
+  else if(c==='achievements'){ document.querySelector('.navbtn[data-panel="panel-achieve"]').click(); }
+  else if(c==='clear'){ $('#miniTerm').innerHTML=''; }
+  else if(c==='name'){ const n = generateHackerName(); appendTermLine(`[name] ${n}`); }
+  else { appendTermLine('Unknown command'); }
+}
+
+/* ---------- Memory Match ---------- */
+let memValues = [];
+let memState = {opened:[],matched:[]};
+function setupMemory(){
+  const pairs = 8;
+  const icons = ['♠','♥','♦','♣','★','☼','☯','♫','✈','☢','✦','☾','☀','⚡','✪','✿'];
+  const pool = [];
+  for(let i=0;i<pairs;i++) pool.push(icons[i%icons.length]);
+  memValues = shuffle([...pool,...pool]).slice(0,pairs*2);
+  memState = {opened:[],matched:[]};
+  renderMemory();
+}
+function renderMemory(){
+  $('#memoryGrid').innerHTML = memValues.map((v,i)=>`<div class="mem-card" data-i="${i}">${memState.matched.includes(i)?v:(memState.opened.includes(i)?v:'')}</div>`).join('');
+  $$('.mem-card').forEach(el=>{
+    el.addEventListener('click', ()=> {
+      const idx = Number(el.dataset.i);
+      if(memState.matched.includes(idx) || memState.opened.includes(idx)) return;
+      memState.opened.push(idx);
+      renderMemory();
+      if(memState.opened.length === 2){
+        const [a,b] = memState.opened;
+        if(memValues[a] === memValues[b]){
+          memState.matched.push(a,b);
+          memState.opened=[];
+          $('#memInfo').textContent = `Matched ${memState.matched.length/2} pairs`;
+          if(memState.matched.length === memValues.length){
+            logSys('[GAME] Memory complete!');
+            addAchievement('Completed Memory Match');
+            saveJSON(KEY_ACH, achievements);
+          }
+        } else {
+          setTimeout(()=>{ memState.opened=[]; renderMemory(); }, 700);
+        }
+      }
+    });
+  });
+}
+$('#memRestart').addEventListener('click', ()=>{ setupMemory(); $('#memInfo').textContent='Find pairs'; });
+setupMemory();
+
+/* ---------- Typing test ---------- */
+let typingTimer = null, typingRemaining = 15;
+$('#startTyping').addEventListener('click', ()=> {
+  typingRemaining = 15; $('#typingInfo').textContent = `Time: ${typingRemaining}s`;
+  $('#typingInput').disabled = false; $('#typingInput').value='';
+  $('#typingInput').focus();
+  typingTimer = setInterval(()=>{ typingRemaining--; $('#typingInfo').textContent = `Time: ${typingRemaining}s`; if(typingRemaining<=0){ clearInterval(typingTimer); $('#typingInput').disabled=true; const chars = $('#typingInput').value.replace(/\s+/g,'').length; logSys(`[GAME] Typing test complete — chars: ${chars}`); addAchievement('Finished Typing Test'); } },1000);
+});
+
+/* ---------- Tools ---------- */
+$('#genPw').addEventListener('click', ()=> {
+  const len = Math.max(6,Math.min(30,Number($('#pwLen').value||12)));
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+  let out = ''; for(let i=0;i<len;i++) out += chars.charAt(Math.floor(Math.random()*chars.length));
+  $('#pwOut').value = out;
+});
+$('#copyPw').addEventListener('click', ()=> { navigator.clipboard?.writeText($('#pwOut').value).then(()=>alert('Copied')); });
+
+$('#encB64').addEventListener('click', ()=> { try{ $('#b64out').value = btoa($('#b64in').value); }catch(e){ $('#b64out').value = 'Error'; } });
+$('#decB64').addEventListener('click', ()=> { try{ $('#b64out').value = atob($('#b64in').value); }catch(e){ $('#b64out').value = 'Invalid base64'; } });
+
+$('#revBtn').addEventListener('click', ()=> { $('#revOut').value = $('#revIn').value.split('').reverse().join(''); });
+
+$('#genName').addEventListener('click', ()=>{ const n = generateHackerName(); $('#hackerName').value = n; $('#nameOut').value = n; logSys(`[NAME] Generated ${n}`); });
+$('#genNameBtn').addEventListener('click', ()=>{ document.querySelector('.navbtn[data-panel="panel-home"]').click(); $('#genName').click(); });
+$('#genNameTool').addEventListener('click', ()=>{ const n=generateHackerName(); $('#nameOut').value=n; logSys(`[NAME] ${n}`); });
+$('#copyName').addEventListener('click', ()=>navigator.clipboard?.writeText($('#nameOut').value).then(()=>alert('Copied')));
+
+/* Timer */
+let timerInterval = null, timerLeft = 0;
+$('#startTimer').addEventListener('click', ()=> {
+  timerLeft = Math.max(5,Number($('#timerSec').value)||30);
+  $('#timerDisplay').textContent = formatTime(timerLeft);
+  clearInterval(timerInterval);
+  timerInterval = setInterval(()=> {
+    timerLeft--; $('#timerDisplay').textContent = formatTime(timerLeft);
+    if(timerLeft<=0){ clearInterval(timerInterval); logSys('[TIMER] Countdown finished'); }
+  },1000);
+});
+$('#stopTimer').addEventListener('click', ()=> { clearInterval(timerInterval); $('#timerDisplay').textContent='00:00'; });
+
+function formatTime(s){ const mm = String(Math.floor(s/60)).padStart(2,'0'); const ss = String(s%60).padStart(2,'0'); return `${mm}:${ss}`; }
+
+/* ---------- Auth & Profile (local demo) ---------- */
+$('#openAuthBtn').addEventListener('click', ()=> { $('#authMsg').textContent=''; $('#authModal').style.display='flex'; });
+$('#authClose').addEventListener('click', ()=> $('#authModal').style.display='none');
+
+$('#authSignUp').addEventListener('click', ()=> {
+  const email = $('#authEmail').value.trim().toLowerCase();
+  const user = $('#authUser').value.trim();
+  const pass = $('#authPass').value;
+  if(!email||!user||!pass){ $('#authMsg').textContent='Complete fields'; return; }
+  if(users[email]){ $('#authMsg').textContent='Account exists'; return; }
+  users[email] = {email,username:user,password:pass,photo:null};
+  saveJSON(KEY_USERS, users);
+  sessionStorage.setItem('cl_user', email);
+  $('#authModal').style.display='none';
+  updateUserDisplay();
+  logSys(`[AUTH] New user created: ${user}`);
+});
+$('#authSignIn').addEventListener('click', ()=> {
+  const email = $('#authEmail').value.trim().toLowerCase();
+  const pass = $('#authPass').value;
+  if(users[email] && users[email].password === pass){
+    sessionStorage.setItem('cl_user', email);
+    $('#authModal').style.display='none';
+    updateUserDisplay();
+    logSys(`[AUTH] Signed in: ${users[email].username}`);
+  } else { $('#authMsg').textContent='Invalid credentials'; }
+});
+
+$('#openProfileBtn').addEventListener('click', ()=> {
+  const cur = sessionStorage.getItem('cl_user');
+  if(!cur){ alert('Sign in first'); $('#authModal').style.display='flex'; return; }
+  const user = users[cur];
+  const modal = document.createElement('div');
+  modal.style.position='fixed'; modal.style.inset='0'; modal.style.background='rgba(0,0,0,0.8)'; modal.style.display='flex'; modal.style.alignItems='center'; modal.style.justifyContent='center'; modal.style.zIndex=99;
+  const box = document.createElement('div'); box.style.background='#021617'; box.style.padding='14px'; box.style.borderRadius='12px'; box.style.border='1px solid rgba(0,255,138,0.06)';
+  box.innerHTML = `<div style="display:flex;gap:12px;align-items:flex-start"><div class="avatar" style="width:96px;height:96px;border-radius:12px;background:linear-gradient(135deg,#083,#026);display:flex;align-items:center;justify-content:center;font-weight:900;color:#001">${user.username.charAt(0).toUpperCase()}</div><div style="flex:1"><div style="font-weight:900">${user.username}</div><div class="small">${user.email}</div><div style="margin-top:8px"><input id="profName" value="${user.username}" placeholder="username"><input id="profPass" placeholder="New password" type="password"><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" id="saveProfBtn">Save</button><button class="btn" id="signOutBtn">Sign out</button></div></div></div></div>`;
+  modal.appendChild(box); document.body.appendChild(modal);
+  box.querySelector('#saveProfBtn').addEventListener('click', ()=>{
+    const newName = box.querySelector('#profName').value.trim();
+    const newPass = box.querySelector('#profPass').value.trim();
+    if(newName) users[cur].username = newName;
+    if(newPass) users[cur].password = newPass;
+    saveJSON(KEY_USERS, users);
+    updateUserDisplay();
+    alert('Saved');
+  });
+  box.querySelector('#signOutBtn').addEventListener('click', ()=> { sessionStorage.removeItem('cl_user'); updateUserDisplay(); document.body.removeChild(modal); });
+  modal.addEventListener('click', (e)=>{ if(e.target===modal) document.body.removeChild(modal); });
+});
+
+function updateUserDisplay(){ const cur = sessionStorage.getItem('cl_user'); if(!cur) $('#userLabel').textContent='guest'; else $('#userLabel').textContent = users[cur].username; }
+updateUserDisplay();
+
+/* ---------- Achievements restore ---------- */
+achievements = loadJSON(KEY_ACH, achievements);
+if(achievements.flippedAll) addAchievement('Flipped all flashcards');
+if(achievements.quizDone) addAchievement('Completed 30-Q Quiz');
+
+/* ---------- Helper: generate hacker name ---------- */
+function generateHackerName(){
+  const prefixes=["Zero","Dark","Cyber","Shadow","Null","Neo","Ghost","Root","Phantom","Crypto","Hex","Byte","Anon","Viral","Net"];
+  const cores=["Byte","Hack","N3t","Root","Crypt","Ghost","Over","Signal","Xploit","Kernel","Cipher","Storm","Shell"];
+  const suffixes=["1337","X","404","_","99","77","Ops","Sec","Anon","Sys","Exe","Ph4nt0m"];
+  const r = arr => arr[Math.floor(Math.random()*arr.length)];
+  const name = r(prefixes) + r(cores) + r(suffixes);
+  return name.replace(/o/gi,'0').replace(/a/gi,'4');
+}
+
+/* ---------- Matrix background ---------- */
+(function matrix(){
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+  function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; cols = Math.floor(canvas.width/size); if(drops.length !== cols) drops.length = cols; }
+  let size = 14;
+  let cols = Math.floor(window.innerWidth/size);
+  let drops = Array(cols).fill(1);
+  function draw(){
+    if(!canvas) return;
+    ctx.fillStyle = 'rgba(0,0,0,0.06)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = 'rgba(0,255,138,0.10)'; ctx.font = size + 'px monospace';
+    cols = Math.floor(canvas.width/size);
+    if(drops.length !== cols) drops = Array(cols).fill(1);
+    const letters = "abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*(){}[]<>?/\\|";
+    for(let i=0;i<cols;i++){
+      const char = letters.charAt(Math.floor(Math.random()*letters.length));
+      const x = i*size, y = drops[i]*size;
+      ctx.fillText(char,x,y);
+      if(y > canvas.height && Math.random() > 0.975) drops[i]=0;
+      drops[i]++;
+    }
+    requestAnimationFrame(draw);
+  }
+  function onResize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+  window.addEventListener('resize', onResize);
+  onResize(); draw();
+})();
+
+/* ---------- Startup messages ---------- */
+function logSys(msg){ const el=$('#sysLog'); el.innerHTML += `<div style="color:var(--muted)">${msg}</div>`; el.scrollTop = el.scrollHeight; }
+logSys('[SYS] CLDBNDWGN initialized');
+
+/* ---------- Render initial pieces ---------- */
+/* Quick funfacts and flashcards already rendered above */
+renderFlash();
+renderFunList();
+
+/* ---------- Small helpers ---------- */
+renderLeaderboard();
+renderAchievements();
+
+/* End of script */
+</script>
 </body>
 </html>
