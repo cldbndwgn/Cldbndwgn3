@@ -1,79 +1,55 @@
- <!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <title>Cldcipher — Single File App</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CldbandwagonCphr — Learn Cybersecurity</title>
-
-  <!-- Friendly monospaced look -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;500&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
   <style>
+    /* ========= GLOBAL STYLES ========= */
     :root{
-      --bg:#f6fbfc;
-      --card:#ffffff;
-      --muted:#5b6b73;
-      --accent:#00b894; /* teal */
-      --accent-2:#2d98da; /* blue */
-      --glass: rgba(13,22,26,0.03);
-      --radius:12px;
-      --mono: 'Roboto Mono', monospace;
-      --ui: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      --maxw:1100px;
+      --bg:#f6fbfc; --card:#fff; --muted:#52656b;
+      --primary:#2563eb; --accent:#0ea37a;
+      --mono: 'Courier New', monospace;
+      --ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:var(--ui);background:linear-gradient(180deg,#e9fbff,#f6fbfc);color:#0f1720;-webkit-font-smoothing:antialiased}
-    a{color:var(--accent-2);text-decoration:none}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;max-width:var(--maxw);margin:0 auto}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#002;font-weight:800;font-family:var(--mono)}
-    .titles{line-height:1}
-    .title{font-weight:700;font-size:18px}
+    body{margin:0;font-family:var(--ui);background:linear-gradient(180deg,var(--bg),#eef7f8);color:#0a1b20;-webkit-font-smoothing:antialiased}
+    a{color:var(--primary)}
+    header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:linear-gradient(90deg,#f7fbfd,#ffffff);border-bottom:1px solid rgba(2,6,23,0.04)}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#002;font-weight:800;font-family:var(--mono)}
+    .title{font-family:var(--mono);font-weight:700}
     .subtitle{font-size:12px;color:var(--muted)}
     .top-actions{display:flex;gap:8px;align-items:center}
-    .btn{border:1px solid rgba(15,23,32,0.06);padding:8px 12px;border-radius:10px;background:transparent;cursor:pointer;font-weight:600}
-    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#002;border:none}
-    .container{max-width:var(--maxw);margin:18px auto;padding:0 16px 60px}
-    .layout{display:grid;grid-template-columns:320px 1fr;gap:18px}
-    @media(max-width:880px){ .layout{grid-template-columns:1fr} .side{order:2} .main{order:1} header{flex-direction:column;align-items:flex-start} }
-    /* side panel */
-    .side{position:sticky;top:18px;align-self:start}
-    .panel{background:var(--card);border-radius:var(--radius);padding:12px;border:1px solid rgba(15,23,32,0.04);box-shadow:0 6px 20px rgba(2,6,23,0.04)}
-    .section-title{font-weight:700;color:#073642;margin-bottom:8px}
+    .btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(2,6,23,0.06);background:transparent;cursor:pointer}
+    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--accent));color:#fff;border:none}
+    .container{max-width:1100px;margin:18px auto;padding:0 16px 80px}
+    .grid{display:grid;grid-template-columns:300px 1fr;gap:18px}
+    @media(max-width:920px){ .grid{grid-template-columns:1fr} header{flex-direction:column;align-items:flex-start} .top-actions{margin-top:8px} }
+    .panel{background:var(--card);border-radius:12px;padding:12px;border:1px solid rgba(2,6,23,0.04);box-shadow:0 8px 24px rgba(6,50,56,0.04)}
     .small{font-size:13px;color:var(--muted)}
-    .fun-carousel{height:220px;overflow:auto;padding:8px;border-radius:10px;background:linear-gradient(180deg,rgba(13,22,26,0.02),transparent)}
-    .fun-item{padding:10px;border-radius:8px;background:linear-gradient(180deg,#fff, #f7fffd);margin-bottom:8px;border:1px solid rgba(2,6,23,0.03)}
-    .ad-demo{height:90px;border-radius:10px;background:linear-gradient(180deg,#fbfff8,#f3fff6);display:flex;align-items:center;justify-content:center;border:2px dashed rgba(0,178,148,0.12);color:var(--muted)}
-    .nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-    .nav button{padding:8px 10px;border-radius:8px;border:1px solid rgba(2,6,23,0.04);background:transparent;cursor:pointer}
-    /* main content */
-    .main{display:flex;flex-direction:column;gap:14px}
-    .hero{display:flex;flex-direction:column;gap:8px;padding:18px;border-radius:14px;background:linear-gradient(180deg,#ffffff,#f7fdfd);border:1px solid rgba(2,6,23,0.03)}
-    .hero h1{margin:0;font-size:22px}
-    .hero p{margin:0;color:var(--muted)}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    @media(max-width:880px){ .grid{grid-template-columns:1fr} }
-    .card{background:var(--card);padding:12px;border-radius:12px;border:1px solid rgba(2,6,23,0.04)}
     .muted{color:var(--muted)}
-    .lesson-card{padding:12px;border-radius:10px;background:linear-gradient(180deg,#fbfffd,#ffffff);border:1px solid rgba(2,6,23,0.03)}
-    .flash-row{display:flex;gap:8px}
-    .meter{height:10px;background:#eef7f6;border-radius:8px;overflow:hidden;border:1px solid rgba(2,6,23,0.04)}
-    .meter > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width 800ms ease}
-    .quiz-list{display:grid;gap:8px}
-    .quiz-q{padding:10px;border-radius:8px;border:1px solid rgba(2,6,23,0.03);background:#fcfffe}
-    .option-btn{display:block;width:100%;text-align:left;padding:8px;border-radius:8px;border:1px solid rgba(2,6,23,0.04);background:transparent;margin-top:6px;cursor:pointer}
-    .option-btn.correct{outline:3px solid rgba(0,200,120,0.16)}
-    .option-btn.wrong{outline:3px solid rgba(255,60,80,0.12)}
-    .game-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-    @media(max-width:600px){ .game-grid{grid-template-columns:1fr} }
-    footer{padding:14px;text-align:center;color:var(--muted);font-size:13px}
-    /* small utilities */
+    .fun-carousel{height:260px;overflow:auto;padding:8px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfffe)}
+    .fun-item{padding:10px;border-radius:8px;background:#fff;margin-bottom:8px;border:1px solid rgba(2,6,23,0.03)}
+    .hero{display:flex;justify-content:space-between;align-items:center;padding:18px;border-radius:14px;background:linear-gradient(180deg,#ffffff,#f7fffb)}
+    .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#001;font-weight:800;font-family:var(--mono)}
+    .accordion{border-radius:10px;border:1px solid rgba(2,6,23,0.04);overflow:hidden}
+    .acc-item + .acc-item{margin-top:8px}
+    .acc-head{background:#fbfffb;padding:12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+    .acc-body{padding:12px;display:none;background:#fff}
+    pre{background:#0b1220;color:#dff9ee;padding:12px;border-radius:8px;overflow:auto;font-family:var(--mono);font-size:13px}
+    .option-btn{display:block;width:100%;text-align:left;padding:10px;border-radius:8px;border:1px solid rgba(2,6,23,0.04);background:transparent;margin-top:8px;cursor:pointer}
+    .option-btn.correct{outline:3px solid rgba(46,204,113,0.12)}
+    .option-btn.wrong{outline:3px solid rgba(231,76,60,0.12)}
+    .game-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    @media(max-width:720px){ .game-grid{grid-template-columns:1fr} }
+    .meter{height:12px;background:#f1fbf9;border-radius:8px;overflow:hidden;border:1px solid rgba(2,6,23,0.04)}
+    .meter > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width 400ms ease}
     .center{display:flex;align-items:center;justify-content:center}
-    .hidden{display:none}
-    .avatar-preview{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#001;font-weight:800;font-family:var(--mono)}
-    .input-inline{display:flex;gap:8px}
-    .pill{background:linear-gradient(90deg,#fff,#f8fff8);padding:6px 10px;border-radius:999px;border:1px solid rgba(2,6,23,0.03)}
-    .badge{padding:4px 8px;border-radius:6px;background:#e8ffef;color:#014;display:inline-block;font-weight:700}
+    footer{padding:16px;text-align:center;color:var(--muted);margin-top:18px}
+    input[type="text"], input[type="password"], input[type="email"], textarea { width:100%; padding:8px 10px; border-radius:8px; border:1px solid rgba(2,6,23,0.06); margin-top:8px; }
+    .small-ghost{font-size:12px;color:#7a8b90}
+    .badge{padding:6px 10px;border-radius:999px;background:#eefaf4;color:#013;display:inline-block;font-weight:700}
   </style>
 </head>
 <body>
@@ -81,219 +57,236 @@
   <header>
     <div class="brand">
       <div class="logo">CB</div>
-      <div class="titles">
-        <div class="title">CldbandwagonCphr</div>
-        <div class="subtitle">friendly cybersecurity learning — ethics first</div>
+      <div>
+        <div class="title">Cldcipher</div>
+        <div class="subtitle">Learn Ethical Hacking — Friendly & Private</div>
       </div>
     </div>
 
     <div class="top-actions">
-      <div id="welcomeLabel" class="small">Not signed in</div>
-      <button class="btn" id="openSignBtn">Sign In / Up</button>
-      <button class="btn" id="openProfileBtn">Profile</button>
-      <button class="btn-primary" id="startBtn">Start Lessons</button>
+      <div style="text-align:right">
+        <div id="welcomeLabel" class="small">Guest</div>
+        <div id="profileName" class="small muted">Not signed in</div>
+      </div>
+      <div id="avatarDisplay" class="avatar">🙂</div>
+      <button class="btn" id="openAuthBtn">Sign In / Sign Up</button>
+      <button class="btn" id="profileBtn">Profile</button>
+      <button class="btn-primary" id="dashboardBtn">Dashboard</button>
     </div>
   </header>
 
   <div class="container">
-    <div class="layout">
+    <section class="hero panel" id="dashboard">
+      <div style="max-width:65%">
+        <h1 style="margin:0;font-family:var(--mono)">Cldcipher</h1>
+        <div class="small muted" style="margin-top:8px">A modern, local-first learning playground for ethical cybersecurity. Practice safely.</div>
+        <div style="height:12px"></div>
+        <div class="meter" title="Overall progress"><i id="overallProgress" style="width:0%"></i></div>
+        <div style="margin-top:8px" class="small">Progress: <strong id="progressText">0%</strong></div>
+        <div style="margin-top:12px">
+          <button class="btn-primary" id="ctaLessons">Open Lessons</button>
+          <button class="btn" id="ctaQuizzes">Take Quiz</button>
+          <button class="btn" id="ctaGames">Play Games</button>
+        </div>
+      </div>
 
-      <!-- SIDE -->
-      <aside class="side">
+      <div style="text-align:right">
+        <div id="heroProfile" style="margin-bottom:8px">
+          <div class="avatar" id="heroAvatar">🙂</div>
+          <div class="small" id="heroName">Guest</div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn" id="openTools">Tools</button>
+          <button class="btn" id="openFun">Fun Facts</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid" style="margin-top:16px">
+
+      <!-- LEFT COLUMN -->
+      <aside>
         <div class="panel">
-          <div class="section-title">Quick Funfacts (50)</div>
-          <div class="fun-carousel" id="funCarousel" tabindex="0" aria-label="Fun facts list"></div>
-          <div style="height:8px"></div>
-          <div class="section-title">Quick Actions</div>
-          <div class="nav" role="navigation" aria-label="Quick navigation">
-            <button data-show="lessons">Lessons</button>
-            <button data-show="tools">Tools</button>
-            <button data-show="quizzes">Quizzes</button>
-            <button data-show="games">Games</button>
-            <button data-show="about">About</button>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:700">Quick Links</div>
+            <div class="small muted">Jump</div>
           </div>
           <div style="height:8px"></div>
-          <div class="section-title">Sponsor</div>
-          <div class="ad-demo" role="img" aria-label="Advertisement placeholder">AD SLOT (demo)</div>
-        </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn" id="navLessons">Lessons</button>
+            <button class="btn" id="navQuizzes">Quizzes</button>
+            <button class="btn" id="navGames">Games</button>
+            <button class="btn" id="navTools">Tools</button>
+            <button class="btn" id="navAbout">About</button>
+          </div>
 
-        <div style="height:12px"></div>
-
-        <div class="panel">
-          <div class="section-title">Progress</div>
-          <div class="small">Flashcards flipped: <span id="flippedCount">0</span>/50</div>
-          <div style="height:8px"></div>
-          <div class="small">Quiz best: <span id="quizBest">0</span>/20</div>
           <div style="height:12px"></div>
-          <div class="section-title">Achievements</div>
-          <div id="achievementsList" class="small">— none yet —</div>
+
+          <div style="font-weight:700">Fun Facts</div>
+          <div class="fun-carousel" id="funFacts" tabindex="0" aria-label="Fun facts">
+            <!-- Fun facts rendered via JS -->
+          </div>
         </div>
       </aside>
 
-      <!-- MAIN -->
-      <main class="main">
-
-        <!-- HERO -->
-        <section class="hero card" id="home">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center">
-            <div>
-              <h1>Welcome to CldbandwagonCphr</h1>
-              <p class="muted">Learn the fundamentals of cybersecurity, practice safe skills and build confidence. Everything is local to your browser — private and offline-ready.</p>
-            </div>
-            <div class="center">
-              <div style="text-align:right">
-                <div class="avatar-preview" id="avatarPreview">🙂</div>
-                <div class="small" style="margin-top:6px">Your local profile</div>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn-primary" id="ctaLessons">Open Lessons</button>
-            <button class="btn" id="ctaTools">Open Tools</button>
-            <button class="btn" id="ctaGames">Play Games</button>
-            <button class="btn" id="ctaQuiz">Take Quiz</button>
-          </div>
-        </section>
+      <!-- RIGHT COLUMN -->
+      <main>
 
         <!-- LESSONS -->
-        <section id="panel-lessons" class="card hidden">
+        <section id="lessons" class="panel" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h2 style="margin:0">Lessons — Collapsible Tutorials</h2>
+            <div class="small">Completed: <strong id="doneCount">0</strong> / <span id="totalLessons">0</span></div>
+          </div>
+          <div style="height:12px"></div>
+          <div class="accordion" id="lessonsAccordion">
+            <!-- lessons filled by JS -->
+          </div>
+        </section>
+
+        <!-- QUIZZES -->
+        <section id="quizzes" class="panel" style="display:none">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <div>
-              <div class="section-title">Lessons — Ethical Hacking Basics</div>
-              <div class="small">High-level, defensive, and legally safe. Practice only in authorized labs.</div>
+              <h2 style="margin:0">Quizzes</h2>
+              <div class="small muted">Immediate feedback. Correct answers shown when missed.</div>
             </div>
-            <div class="small">Last opened: <span id="lastOpenedLessons">never</span></div>
-          </div>
-
-          <div style="height:12px"></div>
-
-          <!-- Lesson list -->
-          <div class="lesson-card" id="lessonsList">
-            <!-- lessons injected here -->
-          </div>
-        </section>
-
-        <!-- TOOLS -->
-        <section id="panel-tools" class="card hidden">
-          <div class="section-title">Tools</div>
-          <div style="height:10px"></div>
-
-          <div class="grid">
-            <div class="card">
-              <h3>Password Strength</h3>
-              <div class="small">Type a password and watch the strength meter animate slowly to show entropy.</div>
-              <input id="pwInput" type="password" placeholder="Enter password to test" aria-label="Password">
-              <div class="meter" aria-hidden="true"><i id="pwMeter"></i></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-                <div class="small" id="pwAdvice">Use 10+ chars, mix letters, numbers & symbols</div>
-                <div id="pwLabel" class="pill">Strength: —</div>
-              </div>
-            </div>
-
-            <div class="card">
-              <h3>Random Hacker Alias</h3>
-              <div class="small">Press generate for a friendly alias.</div>
-              <div style="margin-top:8px;display:flex;gap:8px">
-                <button class="btn" id="genAlias">Generate</button>
-                <button class="btn" id="copyAlias">Copy</button>
-              </div>
-              <div style="margin-top:10px"><input id="aliasOut" readonly placeholder="Your alias appears here"></div>
-              <div style="height:8px"></div>
-              <h4>Text Tools</h4>
-              <div class="small">Base64 encode / decode</div>
-              <textarea id="txtIn" rows="3" placeholder="Type text..."></textarea>
-              <div style="display:flex;gap:8px">
-                <button class="btn" id="encB64">Encode</button>
-                <button class="btn" id="decB64">Decode</button>
-                <button class="btn" id="clearTxt">Clear</button>
-              </div>
-              <textarea id="txtOut" rows="3" readonly placeholder="Output..."></textarea>
-            </div>
-          </div>
-        </section>
-
-        <!-- QUIZ -->
-        <section id="panel-quiz" class="card hidden">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div><div class="section-title">20-Question Quiz</div><div class="small">Immediate feedback. Correct answers shown when missed.</div></div>
             <div><button class="btn-primary" id="startQuizBtn">Start Quiz</button></div>
           </div>
-
           <div style="height:12px"></div>
-
           <div id="quizArea"></div>
         </section>
 
         <!-- GAMES -->
-        <section id="panel-games" class="card hidden">
-          <div class="section-title">Mini-Games</div>
-          <div style="height:10px"></div>
-
+        <section id="games" class="panel" style="display:none">
+          <h2 style="margin:0">Mini Games</h2>
+          <div style="height:12px"></div>
           <div class="game-grid">
-            <!-- Memory Match -->
-            <div class="card">
-              <h4>Memory Match</h4>
-              <div class="small">Find pairs</div>
-              <div style="height:8px"></div>
-              <div id="memGrid" class="grid" style="grid-template-columns:repeat(4,1fr);gap:8px"></div>
-              <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" id="memRestart">Restart</button><div class="small" id="memInfo">Matches: 0</div></div>
+
+            <!-- Guess Number -->
+            <div class="panel">
+              <h4 style="margin:0">Guess the Number</h4>
+              <div class="small muted">Guess a number between 1 and 100</div>
+              <input id="guessInput" placeholder="Enter your guess" type="number" min="1" max="100">
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn" id="guessBtn">Guess</button>
+                <button class="btn" id="guessNew">New</button>
+              </div>
+              <div class="small" id="guessMsg" style="margin-top:8px">Ready</div>
             </div>
 
             <!-- Typing Test -->
-            <div class="card">
-              <h4>Typing Test (15s)</h4>
-              <div class="small">Type the phrase as fast and accurate as you can</div>
-              <div style="height:8px"></div>
-              <div id="typePhrase" class="small">Loading phrase...</div>
+            <div class="panel">
+              <h4 style="margin:0">Typing Test (15s)</h4>
+              <div id="typePhrase" class="small muted">Press start</div>
               <input id="typeInput" placeholder="Type here..." disabled>
-              <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" id="startTyping">Start</button><div class="small" id="typeInfo">Ready</div></div>
-            </div>
-
-            <!-- Reaction Time -->
-            <div class="card">
-              <h4>Reaction Time</h4>
-              <div class="small">Wait for green, then click as fast as possible</div>
-              <div style="height:12px"></div>
-              <div id="reactBox" style="height:60px;border-radius:8px;background:#fff;border:1px solid rgba(2,6,23,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer">Click to start</div>
-              <div style="margin-top:8px"><div class="small">Best: <span id="reactBest">—</span> ms</div></div>
-            </div>
-
-            <!-- Number Sequence -->
-            <div class="card">
-              <h4>Number Sequence</h4>
-              <div class="small">Watch the sequence, repeat it</div>
-              <div style="height:8px"></div>
-              <div id="seqGrid" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-              <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" id="startSeq">Start</button><div class="small" id="seqInfo">Level: 0</div></div>
-            </div>
-
-            <!-- Quick Tap -->
-            <div class="card">
-              <h4>Quick Tap</h4>
-              <div class="small">Tap the button as many times in 10s</div>
-              <div style="height:8px"></div>
-              <div style="display:flex;gap:8px;align-items:center">
-                <button class="btn-primary" id="tapBtn">Tap</button>
-                <div class="small">Score: <span id="tapScore">0</span></div>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn" id="startTypingBtn">Start</button>
+                <div class="small">Result: <span id="typingResult">—</span></div>
               </div>
-              <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" id="startTap">Start 10s</button></div>
+            </div>
+
+            <!-- Memory Match -->
+            <div class="panel">
+              <h4 style="margin:0">Memory Match</h4>
+              <div id="memGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px"></div>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn" id="memReset">Reset</button>
+                <div class="small">Matches: <span id="memMatches">0</span></div>
+              </div>
+            </div>
+
+            <!-- Rock Paper Scissors -->
+            <div class="panel">
+              <h4 style="margin:0">Rock Paper Scissors</h4>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn rps" data-move="rock">Rock</button>
+                <button class="btn rps" data-move="paper">Paper</button>
+                <button class="btn rps" data-move="scissors">Scissors</button>
+              </div>
+              <div class="small" style="margin-top:8px">Result: <span id="rpsRes">—</span></div>
+            </div>
+
+            <!-- Code Breaker -->
+            <div class="panel">
+              <h4 style="margin:0">Code Breaker</h4>
+              <div class="small muted">Guess a 3-digit code; hints show per-digit higher/lower/ok</div>
+              <input id="cbInput" placeholder="e.g. 123">
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn" id="cbGuess">Guess</button>
+                <button class="btn" id="cbNew">New Code</button>
+              </div>
+              <div class="small" id="cbMsg" style="margin-top:8px">Ready</div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- TOOLS -->
+        <section id="toolsPanel" class="panel" style="display:none">
+          <h2 style="margin:0">Tools</h2>
+          <div style="height:12px"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="panel">
+              <h4 style="margin:0">Password Tester</h4>
+              <input id="pwTest" placeholder="Type a password to test">
+              <div style="height:8px" class="meter"><i id="pwTestBar"></i></div>
+              <div style="display:flex;justify-content:space-between;margin-top:8px">
+                <div id="pwAdvice" class="small muted">Advice appears here</div>
+                <div id="pwLabel" class="badge">—</div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h4 style="margin:0">Random Hacker Alias</h4>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn" id="genName">Generate</button>
+                <button class="btn" id="copyName">Copy</button>
+              </div>
+              <input id="nameOut" placeholder="Alias appears here" readonly style="margin-top:8px">
+              <div style="height:12px"></div>
+              <h4 style="margin:0">Daily Tip</h4>
+              <div id="tipOut" class="small muted" style="margin-top:8px"></div>
+              <div style="height:8px"></div>
+              <button class="btn" id="newTip">New Tip</button>
             </div>
           </div>
         </section>
 
-        <!-- ABOUT / Safety -->
-        <section id="panel-about" class="card hidden">
-          <div class="section-title">About CldbandwagonCphr</div>
-          <p class="muted">This project is a learning platform created to teach defensive cybersecurity concepts. It purposefully avoids step-by-step exploit instructions. Always get permission before testing any system.</p>
-          <h4>What you'll learn</h4>
-          <ul class="muted">
-            <li>Responsible disclosure & ethics</li>
-            <li>Basic networking concepts</li>
-            <li>Password hygiene and authentication</li>
-            <li>How to analyze suspicious emails & avoid phishing</li>
-            <li>How to practice safely (CTFs, isolated VMs, labs)</li>
-          </ul>
+        <!-- PROFILE -->
+        <section id="profilePanel" class="panel" style="display:none">
+          <h2 style="margin:0">Profile</h2>
+          <div style="height:12px"></div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="avatar" id="profileAvatar">🙂</div>
+            <div style="flex:1">
+              <div class="small">Display name</div>
+              <input id="profileDisplay" placeholder="Display name">
+              <div style="height:8px"></div>
+              <div class="small">Change password</div>
+              <input id="profilePass" type="password" placeholder="New password">
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn" id="saveProfile">Save</button>
+                <button class="btn" id="signOut">Sign Out</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="panel" style="display:none">
+          <h2 style="margin:0">About Cldcipher</h2>
+          <div style="height:12px"></div>
+          <div class="panel" style="padding:12px">
+            <h3>Mission</h3>
+            <p class="muted">Cldcipher helps learners study defensive cybersecurity safely with local-only storage and practical exercises.</p>
+            <h3>History & Timeline</h3>
+            <ol class="muted">
+              <li>2023 — Prototype lessons & tools</li>
+              <li>2024 — Expanded quizzes & games</li>
+              <li>2025 — Current dashboard & local learning platform</li>
+            </ol>
+          </div>
         </section>
 
       </main>
@@ -302,44 +295,71 @@
   </div>
 
   <footer>
-    <div>© 2025 CldbandwagonCphr — local & private learning • Built with care</div>
+    <div class="small muted">&copy; 2025 Cldcipher — Local & Private Learning</div>
   </footer>
 
-  <!-- Sign Modal -->
-  <div id="signModal" class="hidden" style="position:fixed;inset:0;background:rgba(2,6,23,0.6);display:flex;align-items:center;justify-content:center;z-index:60">
-    <div style="width:92%;max-width:480px;background:#fff;border-radius:12px;padding:14px">
+  <!-- AUTH MODAL (fixed flow) -->
+  <div id="authModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.5);z-index:99">
+    <div class="panel" style="width:94%;max-width:880px;padding:16px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div><strong>Sign In / Sign Up</strong><div class="small muted">Create an account stored locally on this device</div></div>
-        <div><button class="btn" id="closeSign">Close</button></div>
+        <div><h3 style="margin:0">Sign In / Sign Up</h3><div class="small muted">Your account is stored locally on this device.</div></div>
+        <div><button class="btn" id="authClose">Close</button></div>
       </div>
+
       <div style="height:12px"></div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:12px">
         <div>
-          <div class="small">Email</div>
-          <input id="signEmail" placeholder="you@example.com">
-          <div class="small">Username</div>
-          <input id="signUser" placeholder="choose a username">
-          <div class="small">Password</div>
-          <input id="signPass" type="password" placeholder="choose a password">
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button class="btn-primary" id="btnSignup">Sign Up</button>
-            <button class="btn" id="btnSignin">Sign In</button>
+          <!-- Sign In -->
+          <div id="signInPanel">
+            <div class="small muted">Sign In</div>
+            <input id="siUser" placeholder="Username or email">
+            <input id="siPass" type="password" placeholder="Password">
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn-primary" id="btnSignIn">Sign In</button>
+              <button class="btn" id="btnGotoSignUp">Create Account</button>
+            </div>
+            <div style="height:8px"></div>
+            <div style="display:flex;gap:8px">
+              <button class="btn" id="btnForgot">Forgot</button>
+              <button class="btn" id="btnSkip">Skip</button>
+            </div>
+            <div style="height:8px"></div>
+            <div id="authMsg" class="small muted"></div>
           </div>
-          <div style="margin-top:8px"><button class="btn" id="btnForgot">Forgot Password</button></div>
-          <div class="small muted" id="signMsg" style="margin-top:8px"></div>
+
+          <!-- Sign Up -->
+          <div id="signUpPanel" style="display:none">
+            <div class="small muted">Sign Up</div>
+            <input id="suUser" placeholder="Username or email">
+            <input id="suDisplay" placeholder="Display name (optional)">
+            <input id="suPass" type="password" placeholder="Password" oninput="updateSuStrength(this.value)">
+            <div style="height:8px" class="meter"><i id="suBar"></i></div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div id="suAdvice" class="small muted">Use 10+ chars, mix letters, numbers & symbols</div>
+              <div id="suLabel" class="small-ghost">—</div>
+            </div>
+            <div style="height:8px"></div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-primary" id="btnSignUp">Sign Up</button>
+              <button class="btn" id="btnGotoSignIn">Back to Sign In</button>
+            </div>
+          </div>
+
         </div>
 
         <div>
-          <div class="section-title">Why create an account?</div>
-          <ul class="muted">
-            <li>Save progress & achievements locally</li>
-            <li>Personalize your avatar and username</li>
-            <li>Local-only storage — nothing is uploaded</li>
-          </ul>
-          <div style="height:12px"></div>
-          <div class="section-title">Privacy</div>
-          <div class="small muted">Data stays in your browser. Clearing site data will remove accounts and progress.</div>
+          <div class="panel" style="padding:12px">
+            <div style="font-weight:700">Why create an account?</div>
+            <ul class="muted">
+              <li>Save progress & achievements locally</li>
+              <li>Personalize your display name and avatar</li>
+              <li>Local-only storage — nothing is uploaded</li>
+            </ul>
+            <div style="height:12px"></div>
+            <div style="font-weight:700">Privacy</div>
+            <div class="muted">Data stays in your browser. Clearing site data will remove accounts & progress.</div>
+          </div>
         </div>
       </div>
 
@@ -347,196 +367,123 @@
   </div>
 
 <script>
-/* -------------------------
-   CLIENT-SIDE APP LOGIC
-   ------------------------- */
+/* ========== CORE STORAGE & STATE ========== */
+const STORAGE_USERS = 'cldc_users_v1';
+const STORAGE_PROFILE = 'cldc_profile_v1';
+const STORAGE_LESS = 'cldc_less_v1';
+const STORAGE_QUIZ_LEAD = 'cldc_quizlead_v1';
+const STORAGE_GAMES_LEAD = 'cldc_gameslead_v1';
 
-/* Utilities */
-const $ = sel => document.querySelector(sel);
-const $$ = sel => Array.from(document.querySelectorAll(sel));
+let users = JSON.parse(localStorage.getItem(STORAGE_USERS) || '{}'); // users[username] = {password, display, avatar}
+let profile = JSON.parse(localStorage.getItem(STORAGE_PROFILE) || JSON.stringify({cur:null}));
+let lessonsState = JSON.parse(localStorage.getItem(STORAGE_LESS) || JSON.stringify({completed:[]}));
+let quizLeaderboard = JSON.parse(localStorage.getItem(STORAGE_QUIZ_LEAD) || '[]');
+let gamesLeaderboard = JSON.parse(localStorage.getItem(STORAGE_GAMES_LEAD) || '[]');
+
+function saveAll(){
+  localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
+  localStorage.setItem(STORAGE_PROFILE, JSON.stringify(profile));
+  localStorage.setItem(STORAGE_LESS, JSON.stringify(lessonsState));
+  localStorage.setItem(STORAGE_QUIZ_LEAD, JSON.stringify(quizLeaderboard));
+  localStorage.setItem(STORAGE_GAMES_LEAD, JSON.stringify(gamesLeaderboard));
+}
+
+/* ========== HELPERS ========== */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
 const rand = n => Math.floor(Math.random()*n);
-const save = (k,v)=> localStorage.setItem(k, JSON.stringify(v));
-const load = (k,def)=> { try{const v=JSON.parse(localStorage.getItem(k)); return v===null?def:v||def;}catch(e){return def} };
 
-/* Storage keys */
-const K_USERS = 'cb_users_v1';
-const K_PROFILE = 'cb_profile_v1';
-const K_PROGRESS = 'cb_progress_v1';
-const K_ACH = 'cb_ach_v1';
+/* ========== AUTH FLOW (fixed) ========== */
+function openAuth(){ $('#authModal').style.display = 'flex'; showSignIn(); $('#authMsg').textContent=''; }
+function closeAuth(){ $('#authModal').style.display = 'none'; }
+$('#openAuthBtn').addEventListener('click', openAuth);
+$('#authClose').addEventListener('click', closeAuth);
 
-/* Initialize state */
-let users = load(K_USERS, {});          // users[email] = {email,username,password,avatar}
-let profile = load(K_PROFILE, {cur:null}); // cur = email
-let progress = load(K_PROGRESS, {flipped:0,quizBest:0});
-let achievements = load(K_ACH, {list:[]});
+// Switch panels inside modal
+function showSignIn(){ $('#signInPanel').style.display='block'; $('#signUpPanel').style.display='none'; $('#authTitle') && ($('#authTitle').innerText='Sign In'); }
+function showSignUp(){ $('#signInPanel').style.display='none'; $('#signUpPanel').style.display='block'; $('#authTitle') && ($('#authTitle').innerText='Sign Up'); }
+$('#btnGotoSignUp').addEventListener('click', showSignUp);
+$('#btnGotoSignIn').addEventListener('click', showSignIn);
 
-/* ---------- 50 Funfacts ---------- */
-const FUNFACTS = [
-"1972: Pong popularized arcade gaming.",
-"1978: Space Invaders helped create arcade culture.",
-"1980: Pac-Man became a worldwide phenomenon.",
-"1983: The video game crash reshaped the industry.",
-"1985: The NES revived console gaming.",
-"1991: Sonic introduced high-speed platforming.",
-"1993: Doom popularized the first-person shooter.",
-"1994: PlayStation opened the CD-era of games.",
-"1996: Pokemon began its global journey.",
-"2001: Halo influenced modern console shooters.",
-"2004: World of Warcraft popularized subscription MMOs.",
-"2006: Wii made motion controls mainstream.",
-"2009: Minecraft began as an indie success.",
-"2013: GTA V showcased massive production values.",
-"2016: Pokemon Go brought AR to millions.",
-"2018: Fortnite popularized the battle royale trend.",
-"1990: Tetris is one of the most-ported games.",
-"1997: Final Fantasy VII helped popularize cinematic JRPGs.",
-"1998: StarCraft became an esports cornerstone.",
-"2007: Portal combined puzzles with voice-driven humor.",
-"2012: Journey showed emotional multiplayer design.",
-"2014: Dark Souls influenced many modern 'soulslikes'.",
-"2009: League of Legends grew huge in eSports.",
-"2010: Red Dead Redemption advanced open-world storytelling.",
-"2003: Resident Evil 4 redefined action-horror.",
-"1998: Metal Gear Solid fused stealth with story.",
-"2007: BioShock mixed theme and gameplay brilliantly.",
-"2011: Skyrim exploded thanks to modding communities.",
-"2015: The Witcher 3 set narrative standards.",
-"2000: The Sims created a massive life-sim audience.",
-"1995: Chrono Trigger is praised for its story & music.",
-"2008: Braid inspired indie designers worldwide.",
-"2016: Overwatch boosted hero-shooter popularity.",
-"2019: Sekiro emphasized precision combat design.",
-"2003: Half-Life 2 brought physics-driven gameplay.",
-"1999: EverQuest helped define MMOs.",
-"1992: Wolfenstein 3D shaped early FPS mechanics.",
-"1984: Elite pioneered procedural space sims.",
-"2017: Breath of the Wild reinvented open-world play.",
-"2010: Limbo influenced indie atmosphere & art.",
-"2005: Guitar Hero brought rhythm games mainstream.",
-"2014: Shovel Knight revived retro platformers.",
-"1991: Monkey Island set witty adventure standards.",
-"2006: Okami stood out with artistic visuals.",
-"2012: Dishonored blended systems and stealth.",
-"2016: Stardew Valley showed single-dev success.",
-"1999: System Shock 2 inspired immersive sims.",
-"1980: Zork remains a classic interactive fiction."
-];
-/* render funfacts front */
-function renderFunCarousel(){
-  const el = $('#funCarousel');
-  el.innerHTML = FUNFACTS.map((t,i)=>`<div class="fun-item"><strong>${i+1}.</strong> ${t}</div>`).join('');
+// Sign Up
+function updateSuStrength(val){
+  const score = passwordScore(val);
+  $('#suBar').style.width = (Math.max(5, score)) + '%';
+  $('#suBar').style.background = score < 35 ? 'tomato' : score < 65 ? 'orange' : '#2ecc71';
+  $('#suLabel').textContent = score < 35 ? 'Weak' : score < 65 ? 'Medium' : 'Strong';
 }
-renderFunCarousel();
-
-/* ---------- LESSONS (safe, conceptual) ---------- */
-const LESSONS = [
-  {title:"Intro — What is Ethical Hacking?", body:"Ethical hacking is using security skills to help organizations find and fix vulnerabilities. Always have permission."},
-  {title:"Legal & Ethics", body:"Always get written permission. Follow laws and responsible disclosure policies. Never test systems you don't own."},
-  {title:"Networking Basics", body:"Understand IPs, ports, TCP/UDP and how clients & servers communicate. Many security issues arise from misconfiguration."},
-  {title:"Authentication & Passwords", body:"Strong passwords, MFA, and good recovery processes dramatically improve security."},
-  {title:"Web Security Concepts", body:"High-level concepts: input validation, authentication, authorization, session management — not exploit instructions."},
-  {title:"System Hardening", body:"Keep systems patched, remove unnecessary services, and use least-privilege accounts."},
-  {title:"Monitoring & Incident Response", body:"Logging, alerts, and a practiced incident response plan matter more than any single tool."},
-  {title:"Where to Practice Safely", body:"Use CTFs, vulnerable VMs designed for learning, and isolated lab environments. Never attack real services without permission."}
-];
-function renderLessons(){
-  const box = $('#lessonsList');
-  box.innerHTML = LESSONS.map((l,i)=>`<div style="margin-bottom:12px"><h4>${i+1}. ${l.title}</h4><div class="small muted">${l.body}</div></div>`).join('');
-}
-renderLessons();
-
-/* ---------- SIGN IN / SIGN UP ---------- */
-$('#openSignBtn').addEventListener('click', ()=> $('#signModal').classList.remove('hidden'));
-$('#closeSign').addEventListener('click', ()=> $('#signModal').classList.add('hidden'));
-
-$('#btnSignup').addEventListener('click', ()=>{
-  const email = $('#signEmail').value.trim().toLowerCase();
-  const username = $('#signUser').value.trim();
-  const pass = $('#signPass').value;
-  if(!email || !username || !pass){ $('#signMsg').textContent = 'Fill all fields'; return; }
-  if(users[email]){ $('#signMsg').textContent = 'Account already exists. Sign in instead.'; return; }
-  users[email] = {email,username,password:pass,avatar:'🙂'};
-  save(K_USERS, users);
-  profile.cur = email; save(K_PROFILE, profile);
-  $('#signMsg').textContent = 'Account created. Signed in.';
+$('#btnSignUp').addEventListener('click', ()=>{
+  const user = ($('#suUser').value||'').trim().toLowerCase();
+  const display = ($('#suDisplay').value||'').trim() || user.split('@')[0] || 'User'+Math.floor(Math.random()*999);
+  const pass = ($('#suPass').value||'').trim();
+  if(!user || !pass){ $('#authMsg').textContent = 'Complete username and password'; return; }
+  if(users[user]){ $('#authMsg').textContent = 'Account exists — sign in'; return; }
+  const score = passwordScore(pass);
+  if(score < 20){ $('#authMsg').textContent = 'Password too weak (improve length & characters)'; return; }
+  users[user] = {password:pass, display, avatar:'🙂'};
+  profile.cur = user;
+  saveAll();
   updateProfileUI();
-  setTimeout(()=> $('#signModal').classList.add('hidden'), 800);
+  $('#authMsg').textContent = 'Account created & signed in';
+  setTimeout(()=> closeAuth(), 600);
 });
 
-$('#btnSignin').addEventListener('click', ()=>{
-  const email = $('#signEmail').value.trim().toLowerCase();
-  const pass = $('#signPass').value;
-  if(users[email] && users[email].password === pass){
-    profile.cur = email; save(K_PROFILE, profile);
-    $('#signMsg').textContent = 'Signed in';
-    updateProfileUI();
-    setTimeout(()=> $('#signModal').classList.add('hidden'), 600);
-  } else { $('#signMsg').textContent = 'Invalid credentials'; }
+// Sign In
+$('#btnSignIn').addEventListener('click', ()=>{
+  const user = ($('#siUser').value||'').trim().toLowerCase();
+  const pass = ($('#siPass').value||'').trim();
+  if(!user || !pass){ $('#authMsg').textContent = 'Enter username & password'; return; }
+  if(!users[user] || users[user].password !== pass){ $('#authMsg').textContent = 'Invalid credentials'; return; }
+  profile.cur = user;
+  saveAll();
+  updateProfileUI();
+  $('#authMsg').textContent = 'Signed in';
+  setTimeout(()=> closeAuth(), 500);
 });
 
+// Forgot (simulated)
 $('#btnForgot').addEventListener('click', ()=>{
-  const email = prompt('Enter your email for password reset (local only)');
-  if(!email) return alert('Cancelled');
-  const e = email.trim().toLowerCase();
-  if(!users[e]) return alert('No local account found for that email');
-  // local simulated reset: show a one-time code
+  const email = prompt('Enter username/email for reset (local demo):');
+  if(!email) return;
+  const u = (email||'').trim().toLowerCase();
+  if(!users[u]) return alert('No local account found for that username');
   const code = String(100000 + Math.floor(Math.random()*899999));
-  alert(`Password reset code (local demo): ${code}\nEnter this code to set a new password.`);
+  alert(`Reset code (demo): ${code}\nEnter code to set new password.`);
   const entered = prompt('Enter the reset code:');
   if(entered !== code) return alert('Invalid code');
-  const np = prompt('Enter a new password:');
+  const np = prompt('Enter new password:');
   if(!np) return alert('Cancelled');
-  users[e].password = np; save(K_USERS, users);
-  alert('Password changed locally. Sign in with new password.');
+  users[u].password = np; saveAll();
+  alert('Password updated locally.');
 });
 
-/* ---------- PROFILE PANEL ---------- */
-$('#openProfileBtn').addEventListener('click', ()=>{
-  const cur = profile.cur;
-  if(!cur){ alert('Not signed in. Use Sign In / Up'); $('#signModal').classList.remove('hidden'); return; }
-  const u = users[cur];
-  const name = prompt('Change username:', u.username);
-  if(name && name.trim()){ u.username = name.trim(); save(K_USERS, users); updateProfileUI(); alert('Username updated'); }
-});
+// Skip button
+$('#btnSkip').addEventListener('click', ()=> { closeAuth(); $('#authMsg').textContent = ''; });
 
-/* update UI */
+// Logout & profile UI
 function updateProfileUI(){
-  const cur = profile.cur;
-  if(cur && users[cur]){
-    $('#welcomeLabel').textContent = `Signed in: ${users[cur].username}`;
-    $('#avatarPreview').textContent = users[cur].avatar || '🙂';
+  if(profile.cur && users[profile.cur]){
+    $('#welcomeLabel').textContent = 'Signed in: ' + users[profile.cur].display;
+    $('#profileName').textContent = users[profile.cur].display;
+    $('#avatarDisplay').textContent = users[profile.cur].avatar || '🙂';
+    $('#heroAvatar').textContent = users[profile.cur].avatar || '🙂';
+    $('#heroName').textContent = users[profile.cur].display || 'User';
   } else {
-    $('#welcomeLabel').textContent = 'Not signed in';
-    $('#avatarPreview').textContent = '🙂';
+    profile.cur = null;
+    $('#welcomeLabel').textContent = 'Guest';
+    $('#profileName').textContent = 'Not signed in';
+    $('#avatarDisplay').textContent = '🙂';
+    $('#heroAvatar').textContent = '🙂';
+    $('#heroName').textContent = 'Guest';
   }
+  saveAll();
 }
 updateProfileUI();
 
-/* ---------- PASSWORD STRENGTH (slow meter animate) ---------- */
-const pwInput = $('#pwInput'), pwMeter = $('#pwMeter'), pwLabel = $('#pwLabel'), pwAdvice = $('#pwAdvice');
-let animateTimer = null;
-pwInput.addEventListener('input', ()=> {
-  const val = pwInput.value;
-  const score = calcPasswordScore(val); // 0-100
-  pwLabel.textContent = `Strength: ${score < 35 ? 'Weak' : score < 65 ? 'Medium' : 'Strong'}`;
-  const width = Math.max(4, Math.min(100, score));
-  // animate slowly
-  if(animateTimer) clearInterval(animateTimer);
-  const start = parseFloat(pwMeter.style.width)||0;
-  const target = width;
-  const step = (target - start) / 10;
-  let cur = start;
-  animateTimer = setInterval(()=>{
-    cur += step;
-    pwMeter.style.width = cur + '%';
-    if((step>0 && cur>=target-0.5) || (step<0 && cur<=target+0.5)){ pwMeter.style.width = target + '%'; clearInterval(animateTimer); }
-  }, 60);
-  // advice
-  if(score < 35) pwAdvice.textContent = 'Too weak — use 10+ chars, mix cases, numbers & symbols';
-  else if(score < 65) pwAdvice.textContent = 'Okay — add length and a symbol';
-  else pwAdvice.textContent = 'Nice — long passphrase + MFA recommended';
-});
-function calcPasswordScore(s){
+function logout(){ profile.cur = null; saveAll(); updateProfileUI(); alert('Signed out'); }
+
+/* ========== UTILS ========== */
+function passwordScore(s){
   if(!s) return 0;
   let score = 0;
   if(s.length >= 8) score += 20;
@@ -548,322 +495,309 @@ function calcPasswordScore(s){
   return Math.min(100, score);
 }
 
-/* ---------- Alias generator ---------- */
-const prefix = ["Neo","Shadow","Silent","Bright","Zero","Cloud","Byte","Pulse","Nova","Echo","Drift","Cipher","Flux","Vector"];
-const core = ["Root","Kernel","Byte","Packet","Cipher","Signal","Vector","Trace","Loop","Shell","Frame"];
-const suffix = ["404","X","One","Sec","007","Ops","1337","Net"];
-$('#genAlias').addEventListener('click', ()=> {
-  const a = prefix[rand(prefix.length)] + core[rand(core.length)] + suffix[rand(suffix.length)];
-  $('#aliasOut').value = a;
-});
-$('#copyAlias').addEventListener('click', ()=> navigator.clipboard?.writeText($('#aliasOut').value).then(()=> alert('Alias copied')));
-
-/* Text base64 */
-$('#encB64').addEventListener('click', ()=> { try{ $('#txtOut').value = btoa($('#txtIn').value); } catch(e){ $('#txtOut').value = 'Error'; } });
-$('#decB64').addEventListener('click', ()=> { try{ $('#txtOut').value = atob($('#txtIn').value); } catch(e){ $('#txtOut').value = 'Invalid base64'; } });
-$('#clearTxt').addEventListener('click', ()=> { $('#txtIn').value=''; $('#txtOut').value=''; });
-
-/* ---------- Navigation quick buttons ---------- */
-$$('[data-show]').forEach(b=>b.addEventListener('click', ()=>{
-  const id = b.dataset.show;
-  showPanel(id);
-}));
-$('#ctaLessons').addEventListener('click', ()=> showPanel('lessons'));
-$('#ctaTools').addEventListener('click', ()=> showPanel('tools'));
-$('#ctaGames').addEventListener('click', ()=> showPanel('games'));
-$('#ctaQuiz').addEventListener('click', ()=> showPanel('quizzes'));
-$('#startBtn').addEventListener('click', ()=> { showPanel('lessons'); });
-
-function showPanel(name){
-  // hide all main panels
-  $('#panel-lessons').classList.add('hidden');
-  $('#panel-tools').classList.add('hidden');
-  $('#panel-quiz').classList.add('hidden');
-  $('#panel-games').classList.add('hidden');
-  $('#panel-about').classList.add('hidden');
-  // show chosen
-  if(name==='lessons') { $('#panel-lessons').classList.remove('hidden'); $('#lastOpenedLessons').textContent = new Date().toLocaleString(); }
-  if(name==='tools') $('#panel-tools').classList.remove('hidden');
-  if(name==='quizzes' || name==='quiz') $('#panel-quiz').classList.remove('hidden');
-  if(name==='games') $('#panel-games').classList.remove('hidden');
-  if(name==='about') $('#panel-about').classList.remove('hidden');
-  // scroll to panel
-  const p = name==='lessons' ? '#panel-lessons' : name==='tools' ? '#panel-tools' : name==='quizzes' ? '#panel-quiz' : name==='games' ? '#panel-games' : '#panel-about';
-  setTimeout(()=> { const el = document.querySelector(p); if(el) el.scrollIntoView({behavior:'smooth'}); }, 50);
-}
-
-/* ---------- QUIZ (20 Qs) ---------- */
-const QUIZ = [
-  {q:"What is ethical hacking?", opts:["Illegal break-in","Permission-based security testing","Scamming"], a:1},
-  {q:"What is MFA?", opts:["Multiple fake accounts","Multi-Factor Authentication","Malware Finder App"], a:1},
-  {q:"Which is strong password practice?", opts:["Reuse same password","Use long unique passphrases","Write on sticky note"], a:1},
-  {q:"What does phishing attempt to steal?", opts:["Credentials","Printer paper","Sound files"], a:0},
-  {q:"Where should you practice offensive skills?", opts:["Live bank servers","Authorized labs only","Random webservers"], a:1},
-  {q:"Which is a web security risk?", opts:["Input validation","Color contrast","Whitespace"], a:0},
-  {q:"What does HTTPS protect?", opts:["Data in transit","File storage","Keyboard layout"], a:0},
-  {q:"What is a common network scan tool name?", opts:["Nmap","Paint","Slack"], a:0},
-  {q:"What's safer than passwords alone?", opts:["Multi-Factor Authentication","Short passwords","Same passwords"], a:0},
-  {q:"Responsible disclosure means?", opts:["Publish zero-days immediately","Notify owner & coordinate fix","Exploit for fame"], a:1},
-  {q:"Which is malware?", opts:["Antivirus","Ransomware","Firewall"], a:1},
-  {q:"A secure default is?", opts:["Open ports by default","Minimal services enabled","Everyone has admin"], a:1},
-  {q:"What is social engineering?", opts:["Coding only","Manipulating people to reveal info","Encryption method"], a:1},
-  {q:"Which ensures code integrity?", opts:["No backups","Code signing","Share passwords"], a:1},
-  {q:"What is 'least privilege'?", opts:["Everyone is admin","Only necessary permissions","Remove permissions entirely"], a:1},
-  {q:"What to do after breach found?", opts:["Hide it","Report & respond","Sell data"], a:1},
-  {q:"What is XSS short for?", opts:["Cross-Site Scripting","Extra Secure Service","Cross Server Swap"], a:0},
-  {q:"Which is a secure practice for WiFi?", opts:["Use open hotspot","Use WPA2/WPA3 & strong passphrase","Use default router password"], a:1},
-  {q:"Why patch systems?", opts:["For fun","To fix vulnerabilities","To slow performance"], a:1},
-  {q:"What is a CTF?", opts:["Capture The Flag — learning contest","A hacking virus","A file type"], a:0}
-];
-
-let quizState = {index:0,score:0,shuffled:[]};
-
-$('#startQuizBtn').addEventListener('click', ()=> startQuiz());
-function startQuiz(){
-  quizState.index = 0; quizState.score = 0;
-  quizState.shuffled = shuffleArray(QUIZ.slice());
-  renderQuiz();
-}
-
-function renderQuiz(){
-  const area = $('#quizArea'); area.innerHTML = '';
-  if(quizState.index >= quizState.shuffled.length){
-    area.innerHTML = `<div class="card"><h3>Quiz Complete</h3><p class="muted">Score: ${quizState.score} / ${quizState.shuffled.length}</p><div style="display:flex;gap:8px"><button class="btn" id="closeQuiz">Close</button><button class="btn-primary" id="saveQuiz">Save Score</button></div></div>`;
-    $('#closeQuiz')?.addEventListener('click', ()=> area.innerHTML='');
-    $('#saveQuiz')?.addEventListener('click', ()=> {
-      if(quizState.score > progress.quizBest) { progress.quizBest = quizState.score; save(K_PROGRESS, progress); $('#quizBest').textContent = progress.quizBest; alert('New best saved locally'); }
-    });
-    return;
-  }
-  const item = quizState.shuffled[quizState.index];
-  const qHTML = `<div class="quiz-q"><strong>Q${quizState.index+1}.</strong> ${item.q}<div style="height:8px"></div>` + item.opts.map((o,idx)=>`<button class="option-btn" data-idx="${idx}">${String.fromCharCode(65+idx)}. ${o}</button>`).join('') + `</div>`;
-  area.innerHTML = qHTML;
-  $$('.option-btn').forEach(b=>{
-    b.addEventListener('click', (e)=>{
-      const ans = Number(b.dataset.idx);
-      $$('.option-btn').forEach(x=>x.disabled=true);
-      if(ans === item.a){
-        b.classList.add('correct'); quizState.score++;
-      } else {
-        b.classList.add('wrong');
-        // highlight correct
-        const correctBtn = $$('.option-btn').find(x=>Number(x.dataset.idx)===item.a);
-        if(correctBtn) correctBtn.classList.add('correct');
-      }
-      // show explanation placeholder
-      const explain = document.createElement('div'); explain.className='small muted'; explain.style.marginTop='8px';
-      explain.textContent = `Correct answer: ${String.fromCharCode(65+item.a)}.`;
-      area.appendChild(explain);
-      // advance
-      setTimeout(()=>{ quizState.index++; renderQuiz(); }, 900);
-    });
+/* ========== NAVIGATION ========== */
+function hideAllMain(){
+  ['lessons','quizzes','games','toolsPanel','profilePanel','about','dashboard'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = 'none';
   });
 }
+function showSection(id){
+  hideAllMain();
+  if(id === 'dashboard'){ document.getElementById('dashboard').style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); return; }
+  const el = document.getElementById(id);
+  if(el) { el.style.display = 'block'; el.scrollIntoView({behavior:'smooth'}); }
+}
+$('#navLessons').addEventListener('click', ()=> showSection('lessons'));
+$('#navQuizzes').addEventListener('click', ()=> showSection('quizzes'));
+$('#navGames').addEventListener('click', ()=> showSection('games'));
+$('#navTools').addEventListener('click', ()=> showSection('toolsPanel'));
+$('#navAbout').addEventListener('click', ()=> showSection('about'));
+$('#profileBtn').addEventListener('click', ()=> {
+  if(!profile.cur){ openAuth(); return; }
+  showSection('profilePanel'); $('#profileDisplay').value = users[profile.cur].display;
+});
+$('#dashboardBtn').addEventListener('click', ()=> showSection('dashboard'));
+$('#ctaLessons').addEventListener('click', ()=> showSection('lessons'));
+$('#ctaQuizzes').addEventListener('click', ()=> showSection('quizzes'));
+$('#ctaGames').addEventListener('click', ()=> showSection('games'));
+$('#openTools').addEventListener('click', ()=> showSection('toolsPanel'));
+$('#openFun').addEventListener('click', ()=> { document.getElementById('funFacts').scrollIntoView({behavior:'smooth'}); });
 
-/* ---------- FLASHCARDS (50 cards from FUNFACTS) ---------- */
-let flippedSet = new Set(load(K_PROGRESS, {flipped:0}).flipped || []);
-function renderFlashProgress(){ $('#flippedCount').textContent = flippedSet.size + '/50'; }
-renderFlashProgress();
+/* ========== LESSONS DATA (static, collapsible) ========== */
+const LESSONS = [
+  {title:"Intro — What is Ethical Hacking?", content:`<p>Ethical hacking is using security skills to help organizations find and fix vulnerabilities. Always have permission.</p><pre><code># setup safe folder in Linux\nmkdir ~/ctf-lab\ncd ~/ctf-lab\n</code></pre>`},
+  {title:"Linux Basics", content:`<p>Learn common commands used in security research.</p><pre><code>ls -la\nip a\nss -tuln\n</code></pre>`},
+  {title:"Networking Basics", content:`<p>Understand IPs, ports, TCP/UDP, and how clients & servers communicate.</p><pre><code># basic nmap scan in safe lab\nnmap -sS -p 1-1000 192.168.56.101\n</code></pre>`},
+  {title:"Authentication & Passwords", content:`<p>Strong passwords, MFA, and recovery processes.</p><pre><code># generate a random passphrase (example)\nhead /dev/urandom | tr -dc 'A-Za-z0-9' | head -c 24 ; echo\n</code></pre>`},
+  {title:"Web Security Concepts", content:`<p>Input validation, authentication, session management — conceptual overview.</p>`},
+  {title:"System Hardening", content:`<p>Patch systems, disable unnecessary services, use least privilege.</p>`},
+  {title:"Monitoring & Incident Response", content:`<p>Logging, alerts, and practicing incident response.</p>`},
+  {title:"Safe Practice Environments", content:`<p>Use CTFs, vulnerable VMs, and isolated labs.</p>`},
+  {title:"Secure Development Basics", content:`<p>Code reviews, linters, dependency checks.</p>`},
+  {title:"Penetration Testing Workflow", content:`<p>Plan → Discover → Exploit (in lab) → Report. Respect rules of engagement.</p>`}
+];
 
-/* ---------- MINI-GAMES ---------- */
-/* MEMORY MATCH */
+function renderLessons(){
+  const container = $('#lessonsAccordion');
+  container.innerHTML = '';
+  LESSONS.forEach((L, i) => {
+    const item = document.createElement('div');
+    item.className = 'acc-item';
+    item.innerHTML = `
+      <div class="acc-head" data-idx="${i}">
+        <div style="font-weight:700">${i+1}. ${L.title}</div>
+        <div class="small" id="lessonStatus${i}">${lessonsState.completed.includes(i)?'Completed':'Not done'}</div>
+      </div>
+      <div class="acc-body" id="lessonBody${i}">
+        ${L.content}
+        <div style="display:flex;justify-content:flex-end;margin-top:8px">
+          <button class="btn completeLesson" data-idx="${i}">${lessonsState.completed.includes(i)?'Completed':'Mark Complete'}</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+
+  // wire accordion heads
+  $$('.acc-head').forEach(h => h.addEventListener('click', ()=>{
+    const body = h.nextElementSibling;
+    const open = body.style.display === 'block';
+    $$('.acc-body').forEach(b => b.style.display = 'none');
+    if(!open) body.style.display = 'block';
+  }));
+
+  // wire complete buttons
+  $$('.completeLesson').forEach(btn => btn.addEventListener('click', (e)=>{
+    const idx = Number(e.target.dataset.idx);
+    // optional: require previous completion
+    if(idx>0 && !lessonsState.completed.includes(idx-1) && !lessonsState.completed.includes(idx)){
+      alert('Finish previous lessons first.');
+      return;
+    }
+    if(!lessonsState.completed.includes(idx)) lessonsState.completed.push(idx);
+    saveAll();
+    document.getElementById(`lessonStatus${idx}`).textContent = 'Completed';
+    e.target.textContent = 'Completed';
+    updateProgress();
+  }));
+  document.getElementById('totalLessons').textContent = LESSONS.length;
+}
+renderLessons();
+
+/* ========== PROGRESS ======== */
+function updateProgress(){
+  const total = LESSONS.length;
+  const done = lessonsState.completed.length;
+  const pct = Math.round((done/total)*100);
+  $('#overallProgress').style.width = pct + '%';
+  $('#progressText').textContent = pct + '%';
+  $('#doneCount').textContent = done;
+  saveAll();
+}
+updateProgress();
+
+/* ========== FUN FACTS (10 shown, template to add to 50) ========== */
+const FUNFACTS = [
+  "1972: Pong popularized arcade gaming.",
+  "1978: Space Invaders helped create arcade culture.",
+  "1983: The video game crash reshaped the industry.",
+  "1985: The NES revived console gaming.",
+  "1991: Sonic introduced high-speed platforming.",
+  "1993: Doom popularized the first-person shooter.",
+  "1994: PlayStation opened the CD-era of games.",
+  "1996: Pokemon began its global journey.",
+  "2001: Halo influenced modern console shooters.",
+  "2004: World of Warcraft popularized subscription MMOs."
+];
+// render fun facts
+$('#funFacts').innerHTML = FUNFACTS.map((t,i)=>`<div class="fun-item"><strong>${i+1}.</strong> ${t}</div>`).join('');
+$('#tipOut').textContent = FUNFACTS[new Date().getDate() % FUNFACTS.length];
+
+/* ========== QUIZ (5 sample Qs; extend by adding more objects) ========== */
+const QUIZ = [
+  {q:"What is ethical hacking?", opts:["Illegal break-in","Permission-based testing","Scamming"], a:1},
+  {q:"MFA stands for:", opts:["Multi-Factor Access","Multi-Factor Authentication","Multiple File Access"], a:1},
+  {q:"Best password practice:", opts:["Short easy pass","Use long unique passphrases","Write it on paper"], a:1},
+  {q:"Phishing is:", opts:["A network scan","A social engineering attack","A router issue"], a:1},
+  {q:"A safe place to practice offensive skills:", opts:["Live bank servers","Authorized labs only","Random public servers"], a:1}
+];
+let qState = {idx:0,score:0,shuffled:[]};
+$('#startQuizBtn').addEventListener('click', () => startQuiz());
+function startQuiz(){
+  qState.idx = 0; qState.score = 0; qState.shuffled = shuffleArray(QUIZ.slice());
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = $('#quizArea'); area.innerHTML = '';
+  if(qState.idx >= qState.shuffled.length){
+    area.innerHTML = `<div class="panel"><h3>Quiz complete</h3><p class="muted">Score: ${qState.score} / ${qState.shuffled.length}</p><div style="display:flex;gap:8px"><button class="btn" id="closeQuiz">Close</button><button class="btn-primary" id="saveQuiz">Save Score</button></div></div>`;
+    $('#closeQuiz').onclick = ()=> area.innerHTML = '';
+    $('#saveQuiz').onclick = ()=> { const name = profile.cur && users[profile.cur] ? users[profile.cur].display : 'Guest-'+Math.floor(Math.random()*999); quizLeaderboard.push({name,score:qState.score,date:new Date().toISOString()}); saveAll(); alert('Score saved locally'); };
+    return;
+  }
+  const item = qState.shuffled[qState.idx];
+  let html = `<div class="panel"><strong>Q${qState.idx+1}.</strong> ${item.q}<div style="height:8px"></div>`;
+  item.opts.forEach((o,i)=> html += `<button class="option-btn" data-i="${i}">${String.fromCharCode(65+i)}. ${o}</button>`);
+  html += `</div>`; area.innerHTML = html;
+  $$('.option-btn').forEach(b => b.addEventListener('click', (e)=>{
+    const ans = Number(e.target.dataset.i);
+    $$('.option-btn').forEach(x=>x.disabled = true);
+    if(ans === item.a){ e.target.classList.add('correct'); qState.score++; }
+    else { e.target.classList.add('wrong'); const corr = $$('.option-btn').find(x=>Number(x.dataset.i)===item.a); if(corr) corr.classList.add('correct'); }
+    const ex = document.createElement('div'); ex.className='small muted'; ex.style.marginTop='8px'; ex.textContent = `Correct answer: ${String.fromCharCode(65+item.a)}.`; area.appendChild(ex);
+    setTimeout(()=>{ qState.idx++; renderQuiz(); }, 900);
+  }));
+}
+function shuffleArray(a){ const b = a.slice(); for(let i=b.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]] } return b; }
+
+/* ========== GAMES ========= */
+// Guess number
+let secret = rand(100) + 1;
+$('#guessNew').addEventListener('click', ()=> { secret = rand(100) + 1; $('#guessMsg').textContent = 'New number set'; });
+$('#guessBtn').addEventListener('click', ()=> {
+  const v = Number($('#guessInput').value);
+  if(!v){ $('#guessMsg').textContent = 'Enter a number'; return; }
+  if(v === secret){ $('#guessMsg').textContent = 'Correct!'; addGameScore('Guess',1); } else if(v < secret) $('#guessMsg').textContent = 'Too low'; else $('#guessMsg').textContent = 'Too high';
+});
+
+// Typing test
+const phrases = ["Secure your secrets with strong passphrases.","Practice safely in authorized labs only.","Backups save time and headaches.","Update software regularly for security."];
+let typingTimer = null, typingTime = 15;
+$('#startTypingBtn').addEventListener('click', ()=>{
+  typingTime = 15;
+  $('#typePhrase').textContent = phrases[rand(phrases.length)];
+  $('#typeInput').disabled = false; $('#typeInput').value=''; $('#typeInput').focus();
+  $('#typingResult').textContent = typingTime + 's';
+  clearInterval(typingTimer);
+  typingTimer = setInterval(()=>{ typingTime--; $('#typingResult').textContent = typingTime + 's'; if(typingTime<=0){ clearInterval(typingTimer); $('#typeInput').disabled=true; const words = ($('#typeInput').value||'').trim().split(/\s+/).filter(Boolean).length; $('#typingResult').textContent = words + ' w'; addGameScore('Typing', words); } },1000);
+});
+
+// Memory match
 let memValues = [], memOpen = [], memMatched = [];
 function setupMemory(){
   const icons = ['♠','♥','♦','♣','★','☼','☯','♫','✈','☢','✦','☾','✿','✪','⚡','✿'];
   memValues = shuffleArray(icons).slice(0,8);
   memValues = shuffleArray(memValues.concat(memValues));
-  memOpen = []; memMatched = [];
+  memOpen=[]; memMatched=[];
   renderMemory();
 }
 function renderMemory(){
-  const el = $('#memGrid');
-  el.innerHTML = memValues.map((v,i)=> `<div class="card center" style="padding:12px;min-height:56px;cursor:pointer" data-i="${i}">${ memMatched.includes(i) ? v : (memOpen.includes(i) ? v : '') }</div>`).join('');
+  $('#memGrid').innerHTML = memValues.map((v,i)=> `<div class="panel center" style="min-height:56px;cursor:pointer" data-i="${i}">${ memMatched.includes(i) ? v : (memOpen.includes(i) ? v : '') }</div>`).join('');
   $$('#memGrid [data-i]').forEach(d=>{
     d.addEventListener('click', ()=>{
       const idx = Number(d.dataset.i);
       if(memMatched.includes(idx) || memOpen.includes(idx)) return;
-      memOpen.push(idx);
-      renderMemory();
-      if(memOpen.length === 2){
+      memOpen.push(idx); renderMemory();
+      if(memOpen.length===2){
         const [a,b] = memOpen;
-        if(memValues[a] === memValues[b]){
-          memMatched.push(a,b);
-          memOpen = [];
-          $('#memInfo').textContent = `Matches: ${memMatched.length/2}`;
-          if(memMatched.length === memValues.length){
-            award('Memory Master');
-          }
-        } else {
-          setTimeout(()=>{ memOpen = []; renderMemory(); }, 700);
-        }
+        if(memValues[a] === memValues[b]){ memMatched.push(a,b); memOpen = []; $('#memMatches').textContent = memMatched.length/2; if(memMatched.length === memValues.length){ addGameScore('Memory', memMatched.length/2); } }
+        else { setTimeout(()=>{ memOpen=[]; renderMemory(); }, 700); }
       }
     });
   });
 }
-$('#memRestart').addEventListener('click', ()=> { setupMemory(); $('#memInfo').textContent = 'Matches: 0'; });
+$('#memReset').addEventListener('click', ()=> { setupMemory(); $('#memMatches').textContent = 0; });
 setupMemory();
 
-/* TYPING TEST */
-const phrases = [
-  "Secure your secrets with strong passphrases.",
-  "Practice safely in authorized labs only.",
-  "Backups save time and headaches.",
-  "Update software regularly for security."
-];
-let typingTimer = null, typingTime=15;
-$('#startTyping').addEventListener('click', ()=>{
-  typingTime = 15;
-  $('#typePhrase').textContent = phrases[rand(phrases.length)];
-  $('#typeInput').disabled = false; $('#typeInput').value=''; $('#typeInput').focus();
-  $('#typeInfo').textContent = `${typingTime}s`;
-  clearInterval(typingTimer);
-  typingTimer = setInterval(()=> {
-    typingTime--; $('#typeInfo').textContent = `${typingTime}s`;
-    if(typingTime<=0){ clearInterval(typingTimer); $('#typeInput').disabled=true; const words = $('#typeInput').value.trim().split(/\s+/).filter(Boolean).length; award('Typing Speedster'); $('#typeInfo').textContent = `Words: ${words}`; }
-  },1000);
-});
+// RPS
+$$('.rps').forEach(b=> b.addEventListener('click', (e)=>{
+  const choice = e.target.dataset.move;
+  const moves = ['rock','paper','scissors'];
+  const comp = moves[rand(3)];
+  let res='Draw';
+  if(choice===comp) res='Draw';
+  else if((choice==='rock'&&comp==='scissors')||(choice==='paper'&&comp==='rock')||(choice==='scissors'&&comp==='paper')) res='You win';
+  else res='You lose';
+  $('#rpsRes').textContent = `${res} (you: ${choice}, comp: ${comp})`;
+  if(res==='You win') addGameScore('RPS',1);
+}));
 
-/* REACTION TIME */
-let reactTimer=null, reactStart=0, reactBest=load('cb_react_best', null);
-$('#reactBox').addEventListener('click', ()=> {
-  const box = $('#reactBox');
-  if(box.dataset.state === 'waiting') return;
-  if(box.dataset.state !== 'go'){
-    // start
-    box.textContent = 'Wait for green...';
-    box.style.background = '#ffd';
-    box.dataset.state = 'waiting';
-    const delay = 800 + Math.random()*1800;
-    reactTimer = setTimeout(()=> {
-      box.dataset.state = 'go'; box.textContent = 'CLICK!'; box.style.background = 'linear-gradient(90deg,#dfffe6,#c4ffd9)'; reactStart = performance.now();
-    }, delay);
-  } else {
-    const elapsed = Math.round(performance.now()-reactStart);
-    box.textContent = `Time: ${elapsed} ms`;
-    box.dataset.state = '';
-    box.style.background = '#fff';
-    if(!reactBest || elapsed < reactBest){ reactBest = elapsed; localStorage.setItem('cb_react_best', JSON.stringify(reactBest)); $('#reactBest').textContent = reactBest; award('Lightning Reflex'); }
+// Code breaker
+let cbCode = String(100 + Math.floor(Math.random()*900));
+$('#cbNew').addEventListener('click', ()=> { cbCode = String(100 + Math.floor(Math.random()*900)); $('#cbMsg').textContent = 'New code generated'; });
+$('#cbGuess').addEventListener('click', ()=> {
+  const guess = ($('#cbInput').value||'').trim();
+  if(!/^\d{3}$/.test(guess)){ $('#cbMsg').textContent = 'Enter 3 digits'; return; }
+  if(guess === cbCode){ $('#cbMsg').textContent = 'Correct!'; addGameScore('CodeBreaker',1); return; }
+  let hint = '';
+  for(let i=0;i<3;i++){
+    if(guess[i] === cbCode[i]) hint += `${guess[i]}=✓ `;
+    else if(guess[i] < cbCode[i]) hint += `${guess[i]}< `;
+    else hint += `${guess[i]}> `;
   }
+  $('#cbMsg').textContent = 'Hint: ' + hint;
 });
 
-/* SEQUENCE memory */
-let seqArr = [], seqUser = [], seqLevel = 0;
-$('#startSeq').addEventListener('click', ()=> {
-  seqArr = []; seqUser = []; seqLevel = 1; nextSeqLevel();
-});
-function nextSeqLevel(){
-  seqArr.push(rand(9)+1);
-  $('#seqInfo').textContent = `Level: ${seqLevel}`;
-  seqLevel++;
-  // display briefly
-  const grid = $('#seqGrid'); grid.innerHTML = '';
-  seqArr.forEach(n=> { const d = document.createElement('div'); d.className='pill'; d.textContent = n; d.style.padding='6px 10px'; grid.appendChild(d); });
-  setTimeout(()=>{ grid.innerHTML = ''; askSeqInput(); }, 900 + seqArr.length*300);
-}
-function askSeqInput(){
-  const input = prompt('Enter the sequence of numbers separated by commas (e.g. 1,2,3)');
-  if(!input) return;
-  const arr = input.split(',').map(s=>Number(s.trim())).filter(Boolean);
-  if(JSON.stringify(arr) === JSON.stringify(seqArr)){ if(seqLevel>5){ award('Sequence Pro'); alert('You finished several levels!'); } else { alert('Correct — next level'); nextSeqLevel(); } }
-  else { alert('Incorrect — try again from start'); seqArr=[]; seqLevel=0; }
+/* Game scoring & leaderboard (local) */
+function addGameScore(kind, score){
+  const name = (profile.cur && users[profile.cur]) ? users[profile.cur].display : ('Guest-'+Math.floor(Math.random()*999));
+  gamesLeaderboard.push({name,kind,score,date:new Date().toISOString()});
+  gamesLeaderboard.sort((a,b)=>b.score-a.score);
+  if(gamesLeaderboard.length>100) gamesLeaderboard.length = 100;
+  saveAll();
 }
 
-/* TAP CHALLENGE */
-let tapTimer=null, tapCount=0;
-$('#startTap').addEventListener('click', ()=> {
-  tapCount=0; $('#tapScore').textContent = 0;
-  $('#tapBtn').disabled = false;
-  let timeLeft=10; $('#tapBtn').textContent='Tap';
-  tapTimer = setInterval(()=> {
-    timeLeft--;
-    if(timeLeft<=0){ clearInterval(tapTimer); $('#tapBtn').disabled=true; alert(`Time up! Score: ${tapCount}`); award('Tap Champ'); }
-  },1000);
-});
-$('#tapBtn').addEventListener('click', ()=> { tapCount++; $('#tapScore').textContent = tapCount; });
+/* ========== TOOLS ========= */
+const pre = ["Neo","Shadow","Cloud","Byte","Echo","Ghost","Nova","Zero","Drift","Flux"];
+const core = ["Root","Kernel","Cipher","Packet","Trace","Shell","Vector","Signal","Loop","Frame"];
+const suf = ["404","X","One","Sec","Ops","1337","Net","Lab"];
+$('#genName').addEventListener('click', ()=> $('#nameOut').value = pre[rand(pre.length)] + core[rand(core.length)] + suf[rand(suf.length)]);
+$('#copyName').addEventListener('click', ()=> { const t = $('#nameOut').value; if(!t) return alert('No alias'); navigator.clipboard?.writeText(t).then(()=> alert('Alias copied')); });
+$('#newTip').addEventListener('click', ()=> { $('#tipOut').textContent = FUNFACTS[rand(FUNFACTS.length)]; });
 
-/* ---------- Achievements & helpers ---------- */
-function award(name){
-  if(!achievements.list.includes(name)){ achievements.list.push(name); save(K_ACH, achievements); renderAchievements(); alert(`Achievement unlocked: ${name}`); }
-}
-function renderAchievements(){
-  const list = achievements.list;
-  $('#achievementsList').textContent = list.length ? list.join(', ') : '— none yet —';
-}
-renderAchievements();
-
-/* ---------- QUIZ & PROGRESS helpers ---------- */
-function shuffleArray(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a; }
-
-/* ---------- INITIAL UI wiring ---------- */
-$('#startBtn').addEventListener('click', ()=> showPanel('lessons'));
-$('#ctaLessons').addEventListener('click', ()=> showPanel('lessons'));
-$('#ctaTools').addEventListener('click', ()=> showPanel('tools'));
-$('#ctaGames').addEventListener('click', ()=> showPanel('games'));
-$('#ctaQuiz').addEventListener('click', ()=> showPanel('quizzes'));
-
-/* Navigation small shortcuts */
-document.addEventListener('keydown', (e)=> {
-  if(e.key === 'g' && e.ctrlKey){ showPanel('games'); e.preventDefault(); }
+// Password tester live
+$('#pwTest').addEventListener('input', ()=>{
+  const s = $('#pwTest').value; const sc = passwordScore(s); const w = Math.max(4, Math.min(100, sc));
+  $('#pwTestBar').style.width = w + '%';
+  $('#pwLabel').textContent = sc < 35 ? 'Weak' : sc < 65 ? 'Medium' : 'Strong';
+  $('#pwAdvice').textContent = sc < 35 ? 'Too weak — use 10+ chars, mix cases, numbers & symbols' : sc < 65 ? 'Okay — add length' : 'Strong — use MFA also';
 });
 
-/* ---------- Memory: persist progress when flipping flashcards (simple) ---------- */
-function flipCard(id){
-  if(flippedSet.has(id)){ flippedSet.delete(id); } else { flippedSet.add(id); }
-  save(K_PROGRESS, {flipped:Array.from(flippedSet), quizBest:progress.quizBest});
-  renderFlashProgress();
-}
-
-/* ---------- Avatar update (example) ---------- */
-function setAvatarEmoji(emoji){
+/* ========== PROFILE ========== */
+$('#profileBtn').addEventListener('click', ()=> {
+  if(!profile.cur){ openAuth(); return; }
+  showSection('profilePanel');
+  $('#profileDisplay').value = users[profile.cur].display;
+});
+$('#saveProfile').addEventListener('click', ()=>{
   const cur = profile.cur;
-  if(cur && users[cur]){ users[cur].avatar = emoji; save(K_USERS, users); updateProfileUI(); }
-}
-
-/* ---------- Terminal easter egg (safe) ---------- */
-document.addEventListener('keydown', (e)=> {
-  // shortcut: Ctrl+/
-  if(e.ctrlKey && e.key === '/'){
-    const cmd = prompt('Terminal (try: help, facts, lessons, clear)');
-    if(!cmd) return;
-    const c = cmd.trim().toLowerCase();
-    if(c==='help') alert('Commands: help, facts, lessons, games');
-    else if(c==='facts') alert(FUNFACTS[rand(FUNFACTS.length)]);
-    else if(c==='lessons') showPanel('lessons');
-    else if(c==='games') showPanel('games');
-    else alert('Unknown command');
-  }
+  if(!cur) return alert('Sign in first');
+  const newName = ($('#profileDisplay').value||'').trim();
+  const newPass = ($('#profilePass').value||'').trim();
+  if(newName) users[cur].display = newName;
+  if(newPass) users[cur].password = newPass;
+  saveAll();
+  updateProfileUI();
+  alert('Profile updated locally');
 });
+$('#signOut').addEventListener('click', ()=> { profile.cur = null; saveAll(); updateProfileUI(); alert('Signed out'); });
 
-/* ---------- Render initial bits ---------- */
-$('#ctaLessons').scrollIntoView({behavior:'smooth', block:'nearest'});
-$('#quizBest').textContent = progress.quizBest || 0;
-renderAchievements();
+/* ========== INITIAL UI & bindings ========== */
+$('#openAuthBtn').addEventListener('click', openAuth);
+$('#authClose').addEventListener('click', closeAuth);
+$('#btnGotoSignUp').addEventListener('click', ()=> { showSignUp(); });
+$('#btnGotoSignIn').addEventListener('click', ()=> { showSignIn(); });
+$('#btnForgot').addEventListener('click', ()=> { /* handled above */ });
+$('#btnSkip').addEventListener('click', ()=> closeAuth());
 
-/* ---------- Render quiz panel when opening from header CTA ---------- */
+$('#dashboardBtn').addEventListener('click', ()=> showSection('dashboard'));
+$('#navLessons').addEventListener('click', ()=> showSection('lessons'));
+$('#navQuizzes').addEventListener('click', ()=> showSection('quizzes'));
+$('#navGames').addEventListener('click', ()=> showSection('games'));
+$('#navTools').addEventListener('click', ()=> showSection('toolsPanel'));
+$('#navAbout').addEventListener('click', ()=> showSection('about'));
+
 $('#startQuizBtn').addEventListener('click', ()=> startQuiz());
 
-/* ---------- Small safety: ensure UI elements exist ---------- */
-(function bindShortcuts(){
-  $('#openSignBtn').addEventListener('click', ()=> $('#signModal').classList.remove('hidden'));
-  $('#startBtn').addEventListener('click', ()=> showPanel('lessons'));
-})();
+updateProfileUI();
+updateProgress();
 
-/* Save on unload */
-window.addEventListener('beforeunload', ()=> {
-  save(K_USERS, users);
-  save(K_PROFILE, profile);
-  save(K_PROGRESS, {flipped:Array.from(flippedSet), quizBest:progress.quizBest});
-  save(K_ACH, achievements);
-});
+// Start on dashboard
+showSection('dashboard');
 
-/* make sure panels start hidden except home */
-showPanel('home');
+window.addEventListener('beforeunload', saveAll);
 
-/* Small utility: populate alias area initially */
-$('#aliasOut').value = '';
-
-/* END */
 </script>
-
 </body>
 </html>
