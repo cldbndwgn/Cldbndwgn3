@@ -1,803 +1,1179 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Cldcipher — Single File App</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    /* ========= GLOBAL STYLES ========= */
-    :root{
-      --bg:#f6fbfc; --card:#fff; --muted:#52656b;
-      --primary:#2563eb; --accent:#0ea37a;
-      --mono: 'Courier New', monospace;
-      --ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:var(--ui);background:linear-gradient(180deg,var(--bg),#eef7f8);color:#0a1b20;-webkit-font-smoothing:antialiased}
-    a{color:var(--primary)}
-    header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:linear-gradient(90deg,#f7fbfd,#ffffff);border-bottom:1px solid rgba(2,6,23,0.04)}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#002;font-weight:800;font-family:var(--mono)}
-    .title{font-family:var(--mono);font-weight:700}
-    .subtitle{font-size:12px;color:var(--muted)}
-    .top-actions{display:flex;gap:8px;align-items:center}
-    .btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(2,6,23,0.06);background:transparent;cursor:pointer}
-    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--accent));color:#fff;border:none}
-    .container{max-width:1100px;margin:18px auto;padding:0 16px 80px}
-    .grid{display:grid;grid-template-columns:300px 1fr;gap:18px}
-    @media(max-width:920px){ .grid{grid-template-columns:1fr} header{flex-direction:column;align-items:flex-start} .top-actions{margin-top:8px} }
-    .panel{background:var(--card);border-radius:12px;padding:12px;border:1px solid rgba(2,6,23,0.04);box-shadow:0 8px 24px rgba(6,50,56,0.04)}
-    .small{font-size:13px;color:var(--muted)}
-    .muted{color:var(--muted)}
-    .fun-carousel{height:260px;overflow:auto;padding:8px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfffe)}
-    .fun-item{padding:10px;border-radius:8px;background:#fff;margin-bottom:8px;border:1px solid rgba(2,6,23,0.03)}
-    .hero{display:flex;justify-content:space-between;align-items:center;padding:18px;border-radius:14px;background:linear-gradient(180deg,#ffffff,#f7fffb)}
-    .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#001;font-weight:800;font-family:var(--mono)}
-    .accordion{border-radius:10px;border:1px solid rgba(2,6,23,0.04);overflow:hidden}
-    .acc-item + .acc-item{margin-top:8px}
-    .acc-head{background:#fbfffb;padding:12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-    .acc-body{padding:12px;display:none;background:#fff}
-    pre{background:#0b1220;color:#dff9ee;padding:12px;border-radius:8px;overflow:auto;font-family:var(--mono);font-size:13px}
-    .option-btn{display:block;width:100%;text-align:left;padding:10px;border-radius:8px;border:1px solid rgba(2,6,23,0.04);background:transparent;margin-top:8px;cursor:pointer}
-    .option-btn.correct{outline:3px solid rgba(46,204,113,0.12)}
-    .option-btn.wrong{outline:3px solid rgba(231,76,60,0.12)}
-    .game-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    @media(max-width:720px){ .game-grid{grid-template-columns:1fr} }
-    .meter{height:12px;background:#f1fbf9;border-radius:8px;overflow:hidden;border:1px solid rgba(2,6,23,0.04)}
-    .meter > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width 400ms ease}
-    .center{display:flex;align-items:center;justify-content:center}
-    footer{padding:16px;text-align:center;color:var(--muted);margin-top:18px}
-    input[type="text"], input[type="password"], input[type="email"], textarea { width:100%; padding:8px 10px; border-radius:8px; border:1px solid rgba(2,6,23,0.06); margin-top:8px; }
-    .small-ghost{font-size:12px;color:#7a8b90}
-    .badge{padding:6px 10px;border-radius:999px;background:#eefaf4;color:#013;display:inline-block;font-weight:700}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+<title>cldcipher — Learn Ethical Hacking</title>
+<meta name="description" content="cldcipher — free ethical hacking curriculum (demo SPA, browser-only storage)" />
+<style>
+  /* ---- base / reset ---- */
+  :root{
+    --accent:#2563eb; --bg:#071028; --panel:#0b1220; --muted:#9aa4b2;
+    --glass: rgba(255,255,255,0.03); --success:#16a34a; --danger:#ef4444;
+    --maxw:1100px;
+  }
+  *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg) 0%, #081427 60%);color:#e9f0fb;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{cursor:pointer}
+  .container{max-width:var(--maxw);margin:0 auto;padding:12px}
+
+  /* header */
+  header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+  .brand{font-weight:800;font-size:20px}
+  nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .nav-btn{background:transparent;border:0;color:inherit;padding:8px 10px;border-radius:8px}
+  .btn{background:var(--accent);color:white;padding:8px 12px;border-radius:10px;border:0}
+  .pill{background:var(--glass);padding:8px 10px;border-radius:999px;border:0;color:inherit}
+
+  /* grid */
+  .hero{display:flex;gap:16px;align-items:center;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+  .hero-left{flex:1}
+  h1{margin:0;font-size:26px}
+  h2{margin:6px 0 0 0;font-size:18px}
+  p.muted{color:var(--muted);margin:8px 0 0 0}
+  .layout{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:16px}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;box-shadow:0 8px 26px rgba(0,0,0,0.6)}
+  .small{font-size:13px;color:var(--muted)}
+
+  /* lesson list */
+  .lesson-list{display:flex;flex-direction:column;gap:10px}
+  .lesson-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:rgba(255,255,255,0.01)}
+  .lesson-actions{display:flex;gap:8px;align-items:center}
+
+  /* SPA sections */
+  section.app-section{display:none;padding:18px 0 60px 0;min-height:60vh}
+  section.app-section.active{display:block}
+
+  /* full-screen lesson view */
+  .lesson-view{
+    position:fixed;inset:0;background:linear-gradient(180deg, rgba(1,6,20,0.98), rgba(2,6,23,0.99));z-index:1200;padding:12px;overflow:auto;display:none;
+  }
+  .lesson-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .lesson-grid{display:grid;grid-template-columns:1fr 360px;gap:12px;margin-top:12px}
+  .module{padding:12px;border-radius:10px;background:rgba(255,255,255,0.01)}
+  .submodule{padding:10px;border-radius:8px;background:rgba(255,255,255,0.009);margin-top:8px}
+  .progress{height:10px;background:rgba(255,255,255,0.03);border-radius:8px;overflow:hidden}
+  .progress > i{display:block;height:100%;background:var(--accent);width:0%}
+  .quiz-card{padding:12px;border-radius:10px;background:rgba(255,255,255,0.01);margin-top:12px}
+  .quiz-question{padding:8px;border-radius:8px;background:rgba(255,255,255,0.008);margin-bottom:8px}
+
+  /* discussion */
+  .discussion{display:flex;flex-direction:column;gap:8px}
+  .post{padding:10px;border-radius:8px;background:rgba(255,255,255,0.01)}
+
+  /* footer */
+  footer{margin-top:20px;padding:18px;text-align:center;color:var(--muted)}
+
+  /* responsive */
+  @media(max-width:980px){
+    .layout{grid-template-columns:1fr}
+    .lesson-grid{grid-template-columns:1fr;align-items:start}
+    .hero{flex-direction:column;align-items:flex-start}
+  }
+  /* mobile touch targets */
+  @media(max-width:420px){
+    .btn, .pill, .nav-btn{padding:10px 14px;font-size:15px}
+    h1{font-size:22px}
+  }
+
+  input,textarea,select{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+  label{font-size:13px;color:var(--muted)}
+  .hidden{display:none}
+</style>
 </head>
 <body>
-
-  <header>
-    <div class="brand">
-      <div class="logo">CB</div>
-      <div>
-        <div class="title">Cldcipher</div>
-        <div class="subtitle">Learn Ethical Hacking — Friendly & Private</div>
-      </div>
-    </div>
-
-    <div class="top-actions">
-      <div style="text-align:right">
-        <div id="welcomeLabel" class="small">Guest</div>
-        <div id="profileName" class="small muted">Not signed in</div>
-      </div>
-      <div id="avatarDisplay" class="avatar">🙂</div>
-      <button class="btn" id="openAuthBtn">Sign In / Sign Up</button>
-      <button class="btn" id="profileBtn">Profile</button>
-      <button class="btn-primary" id="dashboardBtn">Dashboard</button>
-    </div>
+  <header class="container">
+    <div class="brand">cldcipher</div>
+    <nav id="topnav">
+      <button class="nav-btn" data-target="home">Home</button>
+      <button class="nav-btn" data-target="lessons">Lessons</button>
+      <button class="nav-btn" data-target="quizzes">Quizzes</button>
+      <button class="nav-btn" data-target="community">Community</button>
+      <button class="nav-btn" data-target="faq">FAQ</button>
+      <button id="btn-signup" class="btn">Sign Up</button>
+      <button id="btn-login" class="pill">Sign In</button>
+    </nav>
   </header>
 
-  <div class="container">
-    <section class="hero panel" id="dashboard">
-      <div style="max-width:65%">
-        <h1 style="margin:0;font-family:var(--mono)">Cldcipher</h1>
-        <div class="small muted" style="margin-top:8px">A modern, local-first learning playground for ethical cybersecurity. Practice safely.</div>
-        <div style="height:12px"></div>
-        <div class="meter" title="Overall progress"><i id="overallProgress" style="width:0%"></i></div>
-        <div style="margin-top:8px" class="small">Progress: <strong id="progressText">0%</strong></div>
-        <div style="margin-top:12px">
-          <button class="btn-primary" id="ctaLessons">Open Lessons</button>
-          <button class="btn" id="ctaQuizzes">Take Quiz</button>
-          <button class="btn" id="ctaGames">Play Games</button>
+  <main class="container">
+    <!-- HOME -->
+    <section id="home" class="app-section active">
+      <div class="hero card">
+        <div class="hero-left">
+          <h1>cldcipher — Learn Ethical Hacking</h1>
+          <h2>Ready to Become a Cybersecurity Expert?</h2>
+          <p class="muted">Join thousands of learners transforming their careers with a safe, ethical, and defense-first curriculum.</p>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <button id="cta-enroll" class="btn">Enroll — Start Free</button>
+            <button class="pill" onclick="navigateTo('lessons')">Explore Lessons</button>
+          </div>
+        </div>
+        <div style="width:360px">
+          <div class="card">
+            <strong>Quick sign up</strong>
+            <p class="small">Create a local demo account stored only in your browser.</p>
+            <form id="quick-signup" style="margin-top:8px">
+              <input id="qs-name" placeholder="Full name" required />
+              <input id="qs-email" type="email" placeholder="Email" required />
+              <input id="qs-pass" type="password" placeholder="Password" required />
+              <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+                <div id="pw-strength" class="pill">Strength: —</div>
+                <button class="btn" style="flex:1">Create Account</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 
-      <div style="text-align:right">
-        <div id="heroProfile" style="margin-bottom:8px">
-          <div class="avatar" id="heroAvatar">🙂</div>
-          <div class="small" id="heroName">Guest</div>
+      <div class="layout">
+        <div>
+          <div class="card">
+            <h3>About CLDcipher curriculum</h3>
+            <p class="small">Deep, long-form lessons from Orientation → Fundamentals → Intermediate → Advanced → Expert tracks. All lessons emphasize ethics, defensive design, and legal safe-practices. Each lesson includes conceptual labs (sandbox placeholders in this demo), a quiz, and a discussion area.</p>
+          </div>
+
+          <div id="featured" style="margin-top:12px"></div>
         </div>
-        <div style="display:flex;gap:8px;justify-content:flex-end">
-          <button class="btn" id="openTools">Tools</button>
-          <button class="btn" id="openFun">Fun Facts</button>
-        </div>
+
+        <aside>
+          <div class="card">
+            <h4>Fun fact</h4>
+            <div id="factBox" style="min-height:80px;display:flex;align-items:center;justify-content:center" class="small">Loading fun facts…</div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <h4>Your profile</h4>
+            <div id="profileSummary" class="small">Not signed in</div>
+          </div>
+        </aside>
       </div>
     </section>
 
-    <div class="grid" style="margin-top:16px">
-
-      <!-- LEFT COLUMN -->
-      <aside>
-        <div class="panel">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div style="font-weight:700">Quick Links</div>
-            <div class="small muted">Jump</div>
-          </div>
-          <div style="height:8px"></div>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <button class="btn" id="navLessons">Lessons</button>
-            <button class="btn" id="navQuizzes">Quizzes</button>
-            <button class="btn" id="navGames">Games</button>
-            <button class="btn" id="navTools">Tools</button>
-            <button class="btn" id="navAbout">About</button>
-          </div>
-
-          <div style="height:12px"></div>
-
-          <div style="font-weight:700">Fun Facts</div>
-          <div class="fun-carousel" id="funFacts" tabindex="0" aria-label="Fun facts">
-            <!-- Fun facts rendered via JS -->
-          </div>
-        </div>
-      </aside>
-
-      <!-- RIGHT COLUMN -->
-      <main>
-
-        <!-- LESSONS -->
-        <section id="lessons" class="panel" style="display:none">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <h2 style="margin:0">Lessons — Collapsible Tutorials</h2>
-            <div class="small">Completed: <strong id="doneCount">0</strong> / <span id="totalLessons">0</span></div>
-          </div>
-          <div style="height:12px"></div>
-          <div class="accordion" id="lessonsAccordion">
-            <!-- lessons filled by JS -->
-          </div>
-        </section>
-
-        <!-- QUIZZES -->
-        <section id="quizzes" class="panel" style="display:none">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <h2 style="margin:0">Quizzes</h2>
-              <div class="small muted">Immediate feedback. Correct answers shown when missed.</div>
-            </div>
-            <div><button class="btn-primary" id="startQuizBtn">Start Quiz</button></div>
-          </div>
-          <div style="height:12px"></div>
-          <div id="quizArea"></div>
-        </section>
-
-        <!-- GAMES -->
-        <section id="games" class="panel" style="display:none">
-          <h2 style="margin:0">Mini Games</h2>
-          <div style="height:12px"></div>
-          <div class="game-grid">
-
-            <!-- Guess Number -->
-            <div class="panel">
-              <h4 style="margin:0">Guess the Number</h4>
-              <div class="small muted">Guess a number between 1 and 100</div>
-              <input id="guessInput" placeholder="Enter your guess" type="number" min="1" max="100">
-              <div style="display:flex;gap:8px;margin-top:8px">
-                <button class="btn" id="guessBtn">Guess</button>
-                <button class="btn" id="guessNew">New</button>
-              </div>
-              <div class="small" id="guessMsg" style="margin-top:8px">Ready</div>
-            </div>
-
-            <!-- Typing Test -->
-            <div class="panel">
-              <h4 style="margin:0">Typing Test (15s)</h4>
-              <div id="typePhrase" class="small muted">Press start</div>
-              <input id="typeInput" placeholder="Type here..." disabled>
-              <div style="display:flex;gap:8px;margin-top:8px">
-                <button class="btn" id="startTypingBtn">Start</button>
-                <div class="small">Result: <span id="typingResult">—</span></div>
-              </div>
-            </div>
-
-            <!-- Memory Match -->
-            <div class="panel">
-              <h4 style="margin:0">Memory Match</h4>
-              <div id="memGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px"></div>
-              <div style="display:flex;gap:8px;margin-top:8px">
-                <button class="btn" id="memReset">Reset</button>
-                <div class="small">Matches: <span id="memMatches">0</span></div>
-              </div>
-            </div>
-
-            <!-- Rock Paper Scissors -->
-            <div class="panel">
-              <h4 style="margin:0">Rock Paper Scissors</h4>
-              <div style="display:flex;gap:8px;margin-top:8px">
-                <button class="btn rps" data-move="rock">Rock</button>
-                <button class="btn rps" data-move="paper">Paper</button>
-                <button class="btn rps" data-move="scissors">Scissors</button>
-              </div>
-              <div class="small" style="margin-top:8px">Result: <span id="rpsRes">—</span></div>
-            </div>
-
-            <!-- Code Breaker -->
-            <div class="panel">
-              <h4 style="margin:0">Code Breaker</h4>
-              <div class="small muted">Guess a 3-digit code; hints show per-digit higher/lower/ok</div>
-              <input id="cbInput" placeholder="e.g. 123">
-              <div style="display:flex;gap:8px;margin-top:8px">
-                <button class="btn" id="cbGuess">Guess</button>
-                <button class="btn" id="cbNew">New Code</button>
-              </div>
-              <div class="small" id="cbMsg" style="margin-top:8px">Ready</div>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- TOOLS -->
-        <section id="toolsPanel" class="panel" style="display:none">
-          <h2 style="margin:0">Tools</h2>
-          <div style="height:12px"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-            <div class="panel">
-              <h4 style="margin:0">Password Tester</h4>
-              <input id="pwTest" placeholder="Type a password to test">
-              <div style="height:8px" class="meter"><i id="pwTestBar"></i></div>
-              <div style="display:flex;justify-content:space-between;margin-top:8px">
-                <div id="pwAdvice" class="small muted">Advice appears here</div>
-                <div id="pwLabel" class="badge">—</div>
-              </div>
-            </div>
-
-            <div class="panel">
-              <h4 style="margin:0">Random Hacker Alias</h4>
-              <div style="display:flex;gap:8px;margin-top:8px">
-                <button class="btn" id="genName">Generate</button>
-                <button class="btn" id="copyName">Copy</button>
-              </div>
-              <input id="nameOut" placeholder="Alias appears here" readonly style="margin-top:8px">
-              <div style="height:12px"></div>
-              <h4 style="margin:0">Daily Tip</h4>
-              <div id="tipOut" class="small muted" style="margin-top:8px"></div>
-              <div style="height:8px"></div>
-              <button class="btn" id="newTip">New Tip</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- PROFILE -->
-        <section id="profilePanel" class="panel" style="display:none">
-          <h2 style="margin:0">Profile</h2>
-          <div style="height:12px"></div>
-          <div style="display:flex;gap:12px;align-items:center">
-            <div class="avatar" id="profileAvatar">🙂</div>
-            <div style="flex:1">
-              <div class="small">Display name</div>
-              <input id="profileDisplay" placeholder="Display name">
-              <div style="height:8px"></div>
-              <div class="small">Change password</div>
-              <input id="profilePass" type="password" placeholder="New password">
-              <div style="display:flex;gap:8px;margin-top:8px">
-                <button class="btn" id="saveProfile">Save</button>
-                <button class="btn" id="signOut">Sign Out</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ABOUT -->
-        <section id="about" class="panel" style="display:none">
-          <h2 style="margin:0">About Cldcipher</h2>
-          <div style="height:12px"></div>
-          <div class="panel" style="padding:12px">
-            <h3>Mission</h3>
-            <p class="muted">Cldcipher helps learners study defensive cybersecurity safely with local-only storage and practical exercises.</p>
-            <h3>History & Timeline</h3>
-            <ol class="muted">
-              <li>2023 — Prototype lessons & tools</li>
-              <li>2024 — Expanded quizzes & games</li>
-              <li>2025 — Current dashboard & local learning platform</li>
-            </ol>
-          </div>
-        </section>
-
-      </main>
-
-    </div>
-  </div>
-
-  <footer>
-    <div class="small muted">&copy; 2025 Cldcipher — Local & Private Learning</div>
-  </footer>
-
-  <!-- AUTH MODAL (fixed flow) -->
-  <div id="authModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.5);z-index:99">
-    <div class="panel" style="width:94%;max-width:880px;padding:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div><h3 style="margin:0">Sign In / Sign Up</h3><div class="small muted">Your account is stored locally on this device.</div></div>
-        <div><button class="btn" id="authClose">Close</button></div>
+    <!-- LESSONS -->
+    <section id="lessons" class="app-section">
+      <div class="card">
+        <h2>Lessons</h2>
+        <p class="small">Click 'Open' to view a lesson in full-screen mode. Each lesson is long and subdivided; take your time and use the discussion area for reflection.</p>
+        <div style="margin-top:12px" id="lesson-list" class="lesson-list"></div>
       </div>
+    </section>
 
-      <div style="height:12px"></div>
+    <!-- QUIZZES (all 20) -->
+    <section id="quizzes" class="app-section">
+      <div class="card">
+        <h2>Quizzes</h2>
+        <p class="small">All quizzes are available here — each quiz corresponds to a long lesson. You can take them as you complete lessons.</p>
+        <div id="quiz-list" style="margin-top:12px"></div>
+      </div>
+    </section>
 
-      <div style="display:grid;grid-template-columns:1fr 320px;gap:12px">
+    <!-- COMMUNITY -->
+    <section id="community" class="app-section">
+      <div class="card">
+        <h2>Community</h2>
+        <p class="small">Local discussion demo — posts are stored in your browser.</p>
+
+        <div id="globalDiscussion" style="margin-top:12px" class="discussion"></div>
+
+        <form id="globalPostForm" style="margin-top:12px">
+          <input id="post-title" placeholder="Subject" required />
+          <textarea id="post-body" placeholder="Write something..." rows="3" required></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" type="submit">Post</button>
+            <button type="button" class="pill" onclick="clearDiscussion()">Clear</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="app-section">
+      <div class="card">
+        <h2>FAQ</h2>
+        <p class="small"><strong>Is this legal?</strong> — Always practice only in authorized environments. This demo stores data locally only.</p>
+        <p class="small"><strong>Do you offer certificates?</strong> — This demo includes a local certificate placeholder; production certificates require verified capstones and instructor sign-off.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Full-screen Lesson view (SPA) -->
+  <div id="lessonView" class="lesson-view" role="dialog" aria-hidden="true">
+    <div class="container">
+      <div class="lesson-top">
         <div>
-          <!-- Sign In -->
-          <div id="signInPanel">
-            <div class="small muted">Sign In</div>
-            <input id="siUser" placeholder="Username or email">
-            <input id="siPass" type="password" placeholder="Password">
-            <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn-primary" id="btnSignIn">Sign In</button>
-              <button class="btn" id="btnGotoSignUp">Create Account</button>
-            </div>
-            <div style="height:8px"></div>
-            <div style="display:flex;gap:8px">
-              <button class="btn" id="btnForgot">Forgot</button>
-              <button class="btn" id="btnSkip">Skip</button>
-            </div>
-            <div style="height:8px"></div>
-            <div id="authMsg" class="small muted"></div>
-          </div>
-
-          <!-- Sign Up -->
-          <div id="signUpPanel" style="display:none">
-            <div class="small muted">Sign Up</div>
-            <input id="suUser" placeholder="Username or email">
-            <input id="suDisplay" placeholder="Display name (optional)">
-            <input id="suPass" type="password" placeholder="Password" oninput="updateSuStrength(this.value)">
-            <div style="height:8px" class="meter"><i id="suBar"></i></div>
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div id="suAdvice" class="small muted">Use 10+ chars, mix letters, numbers & symbols</div>
-              <div id="suLabel" class="small-ghost">—</div>
-            </div>
-            <div style="height:8px"></div>
-            <div style="display:flex;gap:8px">
-              <button class="btn-primary" id="btnSignUp">Sign Up</button>
-              <button class="btn" id="btnGotoSignIn">Back to Sign In</button>
-            </div>
-          </div>
-
+          <h2 id="lv-title">Lesson title</h2>
+          <div id="lv-summary" class="small">Lesson summary</div>
         </div>
-
-        <div>
-          <div class="panel" style="padding:12px">
-            <div style="font-weight:700">Why create an account?</div>
-            <ul class="muted">
-              <li>Save progress & achievements locally</li>
-              <li>Personalize your display name and avatar</li>
-              <li>Local-only storage — nothing is uploaded</li>
-            </ul>
-            <div style="height:12px"></div>
-            <div style="font-weight:700">Privacy</div>
-            <div class="muted">Data stays in your browser. Clearing site data will remove accounts & progress.</div>
-          </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div id="lv-progress" class="small">Progress: 0%</div>
+          <button id="lv-close" class="pill">Close</button>
+          <button id="lv-complete-all" class="btn">Mark All Complete</button>
         </div>
       </div>
 
+      <div class="lesson-grid">
+        <div id="lv-content">
+          <!-- modules will be injected here -->
+        </div>
+
+        <aside>
+          <div class="card">
+            <strong>Progress</strong>
+            <div id="lv-progress-text" class="small" style="margin-top:8px">0/0 modules</div>
+            <div class="progress" style="margin-top:8px"><i id="lv-progress-bar" style="width:0%"></i></div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <strong>Discussion</strong>
+            <div id="lv-discussion" style="margin-top:8px" class="discussion small"></div>
+            <form id="lv-post-form" style="margin-top:8px">
+              <input id="lv-post-title" placeholder="Subject" required />
+              <textarea id="lv-post-body" placeholder="Write a comment..." rows="3" required></textarea>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn" type="submit">Post</button>
+                <button type="button" class="pill" id="lv-clear-posts">Clear</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <strong>Resources</strong>
+            <div class="small" style="margin-top:8px">This demo emphasizes defensive practices and ethical behavior. Labs are sandbox placeholders.</div>
+          </div>
+        </aside>
+      </div>
     </div>
   </div>
 
-<script>
-/* ========== CORE STORAGE & STATE ========== */
-const STORAGE_USERS = 'cldc_users_v1';
-const STORAGE_PROFILE = 'cldc_profile_v1';
-const STORAGE_LESS = 'cldc_less_v1';
-const STORAGE_QUIZ_LEAD = 'cldc_quizlead_v1';
-const STORAGE_GAMES_LEAD = 'cldc_gameslead_v1';
+  <footer class="container">© cldcipher 2025</footer>
 
-let users = JSON.parse(localStorage.getItem(STORAGE_USERS) || '{}'); // users[username] = {password, display, avatar}
-let profile = JSON.parse(localStorage.getItem(STORAGE_PROFILE) || JSON.stringify({cur:null}));
-let lessonsState = JSON.parse(localStorage.getItem(STORAGE_LESS) || JSON.stringify({completed:[]}));
-let quizLeaderboard = JSON.parse(localStorage.getItem(STORAGE_QUIZ_LEAD) || '[]');
-let gamesLeaderboard = JSON.parse(localStorage.getItem(STORAGE_GAMES_LEAD) || '[]');
+  <script>
+  /* ============================
+     FULL SITE SCRIPT (single-file)
+     - long lessons (20) with detailed text
+     - 20 quizzes (auto-grade)
+     - 50 fun facts rotating
+     - auth (signup/signin/reset) using localStorage (demo)
+     - SPA navigation + full-screen lesson view
+     ============================ */
 
-function saveAll(){
-  localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
-  localStorage.setItem(STORAGE_PROFILE, JSON.stringify(profile));
-  localStorage.setItem(STORAGE_LESS, JSON.stringify(lessonsState));
-  localStorage.setItem(STORAGE_QUIZ_LEAD, JSON.stringify(quizLeaderboard));
-  localStorage.setItem(STORAGE_GAMES_LEAD, JSON.stringify(gamesLeaderboard));
-}
+  /* ---------- Fun facts (50) ---------- */
+  const FUN_FACTS = [
+    "Ethical hacker and 'white hat' are modern terms — many pioneers were hobbyists and academics.",
+    "Bug bounty programs started gaining traction in the 2000s and helped make web security stronger.",
+    "The term 'white hat' references old Western movies where heroes wore white hats.",
+    "The Morris Worm (1988) exposed the need for better network hygiene and startlingly changed awareness.",
+    "OWASP's Top 10 is a community-driven list of critical web vulnerabilities developers study widely.",
+    "Capture-the-flag (CTF) competitions are one of the fastest ways to learn practical security skills.",
+    "Responsible disclosure balances vendor timelines and user safety; it’s a cornerstone of ethical research.",
+    "Honeypots are traps that help defenders observe attacker behavior in safe, controlled settings.",
+    "Two-factor authentication (2FA) significantly reduces account takeover risk compared to passwords alone.",
+    "Phishing remains one of the most effective real-world attack methods because it targets humans.",
+    "Many universities now offer cybersecurity degrees including ethical hacking courses and labs.",
+    "Zero-day vulnerabilities are known to attackers but not yet patched by vendors — defenders aim to reduce exposure.",
+    "Content Security Policy (CSP) is a browser feature that reduces the impact of certain web attacks.",
+    "Threat modeling helps teams find and prioritize risks early in software design.",
+    "Secure defaults (secure-by-default) reduce accidental insecure deployments across teams.",
+    "Defense in depth uses overlapping protections so single failures don't lead to compromise.",
+    "SIEMs aggregate logs — good alerts are built on clear detection use-cases and tuned rules.",
+    "Automated scanners reduce manual effort but often produce false positives that need triage.",
+    "Secure code review is one of the highest ROI activities for reducing real vulnerabilities.",
+    "Bug reports with clear reproduction steps and remediation recommendations get fixed faster.",
+    "Red teaming borrows concepts from military exercises to test organizational defenses holistically.",
+    "Purple teaming brings attackers and defenders together to build better detection capabilities.",
+    "Browser sandboxing and process isolation evolved because researchers demonstrated exploitation paths.",
+    "Secret scanning in CI/CD prevents accidental leakage of API keys and credentials in repos.",
+    "Continuous integration with security checks (SAST/DAST) catches regressions before release.",
+    "Many large payouts in bug bounties recognize critical vulnerabilities and motivate researchers.",
+    "Responsible researchers often publish high-level writeups without providing live exploit code.",
+    "Secure authentication requires more than passwords: session controls, token rotation, and MFA.",
+    "Logging with context (correlation IDs, user IDs) makes incident response faster and more accurate.",
+    "Ransomware motivated broad investments in backups, detection, and incident response playbooks.",
+    "Network segmentation limits attacker movement and reduces the blast radius of breaches.",
+    "Threat intelligence helps defenders prioritize detections for current attacker techniques.",
+    "Security champions embedded in dev teams accelerate adoption of safe coding practices.",
+    "Many modern security features (HSTS, CSP, secure cookies) were adopted after exploit research.",
+    "Learning security improves general engineering practices like testing, observability, and design.",
+    "Bug bounty programs let organizations crowdsource testing while offering legal safe paths.",
+    "Some legal initiatives exist to coordinate disclosure for critical infrastructure and governments.",
+    "Monitoring and alerting are as important as prevention—detection shortens dwell time.",
+    "Credential stuffing attacks exploit password reuse; encouraging password managers helps mitigate.",
+    "Secure deployment pipelines can use ephemeral environments to reduce exposure of secrets.",
+    "Community-led resources (OWASP, CISA, SANS) provide practical guides for defenders.",
+    "Ethical hacking careers include research, appsec engineering, incident response, and teaching.",
+    "Many vulnerabilities are found by carefully reading code, not just with flashy tools.",
+    "Security is a continuous process: training, testing, patching, detecting, and learning.",
+    "Attackers and defenders co-evolve—continuous education keeps teams prepared.",
+    "Small, consistent security improvements compound into significant risk reductions over time.",
+    "Gamified learning (badges, micro-labs) helps learners build practical skills with feedback.",
+    "A clear, well-structured vulnerability report helps vendors fix issues faster and safer.",
+    "Practical security focuses on protecting users and systems, not proving clever exploits."
+  ];
 
-/* ========== HELPERS ========== */
-const $ = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
-const rand = n => Math.floor(Math.random()*n);
-
-/* ========== AUTH FLOW (fixed) ========== */
-function openAuth(){ $('#authModal').style.display = 'flex'; showSignIn(); $('#authMsg').textContent=''; }
-function closeAuth(){ $('#authModal').style.display = 'none'; }
-$('#openAuthBtn').addEventListener('click', openAuth);
-$('#authClose').addEventListener('click', closeAuth);
-
-// Switch panels inside modal
-function showSignIn(){ $('#signInPanel').style.display='block'; $('#signUpPanel').style.display='none'; $('#authTitle') && ($('#authTitle').innerText='Sign In'); }
-function showSignUp(){ $('#signInPanel').style.display='none'; $('#signUpPanel').style.display='block'; $('#authTitle') && ($('#authTitle').innerText='Sign Up'); }
-$('#btnGotoSignUp').addEventListener('click', showSignUp);
-$('#btnGotoSignIn').addEventListener('click', showSignIn);
-
-// Sign Up
-function updateSuStrength(val){
-  const score = passwordScore(val);
-  $('#suBar').style.width = (Math.max(5, score)) + '%';
-  $('#suBar').style.background = score < 35 ? 'tomato' : score < 65 ? 'orange' : '#2ecc71';
-  $('#suLabel').textContent = score < 35 ? 'Weak' : score < 65 ? 'Medium' : 'Strong';
-}
-$('#btnSignUp').addEventListener('click', ()=>{
-  const user = ($('#suUser').value||'').trim().toLowerCase();
-  const display = ($('#suDisplay').value||'').trim() || user.split('@')[0] || 'User'+Math.floor(Math.random()*999);
-  const pass = ($('#suPass').value||'').trim();
-  if(!user || !pass){ $('#authMsg').textContent = 'Complete username and password'; return; }
-  if(users[user]){ $('#authMsg').textContent = 'Account exists — sign in'; return; }
-  const score = passwordScore(pass);
-  if(score < 20){ $('#authMsg').textContent = 'Password too weak (improve length & characters)'; return; }
-  users[user] = {password:pass, display, avatar:'🙂'};
-  profile.cur = user;
-  saveAll();
-  updateProfileUI();
-  $('#authMsg').textContent = 'Account created & signed in';
-  setTimeout(()=> closeAuth(), 600);
-});
-
-// Sign In
-$('#btnSignIn').addEventListener('click', ()=>{
-  const user = ($('#siUser').value||'').trim().toLowerCase();
-  const pass = ($('#siPass').value||'').trim();
-  if(!user || !pass){ $('#authMsg').textContent = 'Enter username & password'; return; }
-  if(!users[user] || users[user].password !== pass){ $('#authMsg').textContent = 'Invalid credentials'; return; }
-  profile.cur = user;
-  saveAll();
-  updateProfileUI();
-  $('#authMsg').textContent = 'Signed in';
-  setTimeout(()=> closeAuth(), 500);
-});
-
-// Forgot (simulated)
-$('#btnForgot').addEventListener('click', ()=>{
-  const email = prompt('Enter username/email for reset (local demo):');
-  if(!email) return;
-  const u = (email||'').trim().toLowerCase();
-  if(!users[u]) return alert('No local account found for that username');
-  const code = String(100000 + Math.floor(Math.random()*899999));
-  alert(`Reset code (demo): ${code}\nEnter code to set new password.`);
-  const entered = prompt('Enter the reset code:');
-  if(entered !== code) return alert('Invalid code');
-  const np = prompt('Enter new password:');
-  if(!np) return alert('Cancelled');
-  users[u].password = np; saveAll();
-  alert('Password updated locally.');
-});
-
-// Skip button
-$('#btnSkip').addEventListener('click', ()=> { closeAuth(); $('#authMsg').textContent = ''; });
-
-// Logout & profile UI
-function updateProfileUI(){
-  if(profile.cur && users[profile.cur]){
-    $('#welcomeLabel').textContent = 'Signed in: ' + users[profile.cur].display;
-    $('#profileName').textContent = users[profile.cur].display;
-    $('#avatarDisplay').textContent = users[profile.cur].avatar || '🙂';
-    $('#heroAvatar').textContent = users[profile.cur].avatar || '🙂';
-    $('#heroName').textContent = users[profile.cur].display || 'User';
-  } else {
-    profile.cur = null;
-    $('#welcomeLabel').textContent = 'Guest';
-    $('#profileName').textContent = 'Not signed in';
-    $('#avatarDisplay').textContent = '🙂';
-    $('#heroAvatar').textContent = '🙂';
-    $('#heroName').textContent = 'Guest';
+  let factIndex = -1;
+  function rotateFact(){
+    factIndex = (factIndex + 1) % FUN_FACTS.length;
+    const el = document.getElementById('factBox');
+    if(el) el.innerText = FUN_FACTS[factIndex];
   }
-  saveAll();
-}
-updateProfileUI();
+  setInterval(rotateFact, 6000);
+  rotateFact();
 
-function logout(){ profile.cur = null; saveAll(); updateProfileUI(); alert('Signed out'); }
+  /* ---------- Lessons (20 long lessons) ----------
+     For brevity in code, lessons are long strings. They are purposely
+     conceptual and defensive. No exploit steps are provided.
+  */
+  const LESSONS = [
+    {
+      id:'L1-Orientation',
+      title:'Orientation & Ethics (Comprehensive)',
+      summary:'Foundational ethics, law, disclosure, and lab safety.',
+      hours:6,
+      content:
+`Lesson overview:
+This long lesson establishes the ethical foundation every learner must internalize before doing any hands-on testing. Topics include laws and jurisdictions, company responsible disclosure policies, reporting templates, and user privacy considerations.
 
-/* ========== UTILS ========== */
-function passwordScore(s){
-  if(!s) return 0;
-  let score = 0;
-  if(s.length >= 8) score += 20;
-  if(s.length >= 12) score += 15;
-  if(/[a-z]/.test(s)) score += 10;
-  if(/[A-Z]/.test(s)) score += 15;
-  if(/\d/.test(s)) score += 15;
-  if(/[\W_]/.test(s)) score += 25;
-  return Math.min(100, score);
-}
+Modules:
+1) Ethics & historical context — why ethical hacking exists, famous responsible disclosures, and the social contract between researcher and vendor.
+2) Legal frameworks — high-level survey of relevant laws (no legal advice): Computer Misuse Acts, CFAA, GDPR considerations when collecting data, and how jurisdiction shapes responsible behavior.
+3) Scope & consent — how to obtain written authorization, what 'in-scope' vs 'out-of-scope' means, and examples of safe experiment boundaries.
+4) Responsible disclosure process — timelines, redaction practices, coordinating with vendors, CVE requests, and public disclosure best-practices.
+5) Privacy & data handling — how to avoid collecting or storing sensitive user data during tests, redaction and ephemeral logging.
+6) Setting up an isolated lab — VM usage, snapshots, host-only networks, and tips for preserving evidence while avoiding accidental external harm.
 
-/* ========== NAVIGATION ========== */
-function hideAllMain(){
-  ['lessons','quizzes','games','toolsPanel','profilePanel','about','dashboard'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.style.display = 'none';
-  });
-}
-function showSection(id){
-  hideAllMain();
-  if(id === 'dashboard'){ document.getElementById('dashboard').style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); return; }
-  const el = document.getElementById(id);
-  if(el) { el.style.display = 'block'; el.scrollIntoView({behavior:'smooth'}); }
-}
-$('#navLessons').addEventListener('click', ()=> showSection('lessons'));
-$('#navQuizzes').addEventListener('click', ()=> showSection('quizzes'));
-$('#navGames').addEventListener('click', ()=> showSection('games'));
-$('#navTools').addEventListener('click', ()=> showSection('toolsPanel'));
-$('#navAbout').addEventListener('click', ()=> showSection('about'));
-$('#profileBtn').addEventListener('click', ()=> {
-  if(!profile.cur){ openAuth(); return; }
-  showSection('profilePanel'); $('#profileDisplay').value = users[profile.cur].display;
-});
-$('#dashboardBtn').addEventListener('click', ()=> showSection('dashboard'));
-$('#ctaLessons').addEventListener('click', ()=> showSection('lessons'));
-$('#ctaQuizzes').addEventListener('click', ()=> showSection('quizzes'));
-$('#ctaGames').addEventListener('click', ()=> showSection('games'));
-$('#openTools').addEventListener('click', ()=> showSection('toolsPanel'));
-$('#openFun').addEventListener('click', ()=> { document.getElementById('funFacts').scrollIntoView({behavior:'smooth'}); });
+Exercise & deliverable:
+- Write a mock responsible disclosure email (template included).
+- Complete a lab checklist verifying VM isolation, no public exposure, and snapshot recovery plan.`,
+      quiz: {
+        id:'Q1', questions:[
+          { q:'Responsible disclosure primarily aims to:', choices:['Publicly embarrass vendors','Protect users by coordinating fixes','Monetize zero-days'], a:1 },
+          { q:'Testing live systems without permission is:', choices:['Acceptable for learning','Potentially illegal and unethical','Recommended'], a:1 }
+        ]
+      }
+    },
 
-/* ========== LESSONS DATA (static, collapsible) ========== */
-const LESSONS = [
-  {title:"Intro — What is Ethical Hacking?", content:`<p>Ethical hacking is using security skills to help organizations find and fix vulnerabilities. Always have permission.</p><pre><code># setup safe folder in Linux\nmkdir ~/ctf-lab\ncd ~/ctf-lab\n</code></pre>`},
-  {title:"Linux Basics", content:`<p>Learn common commands used in security research.</p><pre><code>ls -la\nip a\nss -tuln\n</code></pre>`},
-  {title:"Networking Basics", content:`<p>Understand IPs, ports, TCP/UDP, and how clients & servers communicate.</p><pre><code># basic nmap scan in safe lab\nnmap -sS -p 1-1000 192.168.56.101\n</code></pre>`},
-  {title:"Authentication & Passwords", content:`<p>Strong passwords, MFA, and recovery processes.</p><pre><code># generate a random passphrase (example)\nhead /dev/urandom | tr -dc 'A-Za-z0-9' | head -c 24 ; echo\n</code></pre>`},
-  {title:"Web Security Concepts", content:`<p>Input validation, authentication, session management — conceptual overview.</p>`},
-  {title:"System Hardening", content:`<p>Patch systems, disable unnecessary services, use least privilege.</p>`},
-  {title:"Monitoring & Incident Response", content:`<p>Logging, alerts, and practicing incident response.</p>`},
-  {title:"Safe Practice Environments", content:`<p>Use CTFs, vulnerable VMs, and isolated labs.</p>`},
-  {title:"Secure Development Basics", content:`<p>Code reviews, linters, dependency checks.</p>`},
-  {title:"Penetration Testing Workflow", content:`<p>Plan → Discover → Exploit (in lab) → Report. Respect rules of engagement.</p>`}
-];
+    {
+      id:'L2-Networks',
+      title:'Networking Deep Dive (TCP/IP & Defenders)',
+      summary:'Comprehensive networking: TCP/IP, DNS, routing, packet analysis, defenders’ lens.',
+      hours:14,
+      content:
+`This long lesson dives into networking fundamentals from a defender-focused perspective. It explains how packets flow across networks, how to read packet captures, common services and protocols (DNS, HTTP, TLS), and how defenders build network detection rules.
 
-function renderLessons(){
-  const container = $('#lessonsAccordion');
-  container.innerHTML = '';
-  LESSONS.forEach((L, i) => {
-    const item = document.createElement('div');
-    item.className = 'acc-item';
-    item.innerHTML = `
-      <div class="acc-head" data-idx="${i}">
-        <div style="font-weight:700">${i+1}. ${L.title}</div>
-        <div class="small" id="lessonStatus${i}">${lessonsState.completed.includes(i)?'Completed':'Not done'}</div>
-      </div>
-      <div class="acc-body" id="lessonBody${i}">
-        ${L.content}
-        <div style="display:flex;justify-content:flex-end;margin-top:8px">
-          <button class="btn completeLesson" data-idx="${i}">${lessonsState.completed.includes(i)?'Completed':'Mark Complete'}</button>
+Modules:
+1) OSI vs TCP/IP models — mapping layers to observable data.
+2) IP routing & NAT — how private networks and NAT affect exposures.
+3) TCP behavior — handshakes, retransmits, windowing, and indicators of reconnaissance.
+4) DNS internals — query types, propagation, and common misconfigurations.
+5) Packet capture analysis — using pcaps to find suspicious flows and correlating with application logs.
+6) Network detection basics — signatures, anomalies, and tuning alerts.
+
+Exercises:
+- Read a provided pcap (in production) and write a detection rule for an observed suspicious flow.
+- Create a list of indicators of compromise (IOCs) from simulated traffic.`,
+      quiz:{
+        id:'Q2', questions:[
+          { q:'Which protocol is connection-oriented?', choices:['UDP','TCP','ICMP'], a:1 },
+          { q:'NAT primarily affects:', choices:['Application cookies','IP addressing and routing','CPU usage'], a:1 }
+        ]
+      }
+    },
+
+    {
+      id:'L3-OS',
+      title:'Operating Systems & Hardening',
+      summary:'Windows and Linux internals, permissions, system hardening, and log analysis.',
+      hours:12,
+      content:
+`This lesson covers operating system architecture and hardening recommendations. Learn about user accounts, file systems, service management, audit logging, and configuration checks that reduce common attack vectors.
+
+Modules:
+1) Linux internals — users, sudo, file permissions, systemd basics, and common misconfigurations.
+2) Windows internals — accounts, UAC, services, event logs, and common hardening settings.
+3) Patch management and secure update strategies.
+4) Log collection and parsing — what to log and how to parse logs for detection.
+5) Configuration baselines and compliance checks.
+
+Exercises:
+- Review a sample system configuration and produce a prioritized hardening checklist.`,
+      quiz:{ id:'Q3', questions:[
+        { q:'Principle of least privilege means:', choices:['Grant admin to all users','Limit permissions to minimal required','Disable all accounts'], a:1 },
+        { q:'System updates are important because they:', choices:['Add features only','Fix known vulnerabilities','Are optional'], a:1 }
+      ]}
+    },
+
+    {
+      id:'L4-WebFundamentals',
+      title:'Web Fundamentals & Secure Architecture',
+      summary:'HTTP, HTTPS, sessions, cookies, headers, and secure deployment patterns.',
+      hours:12,
+      content:
+`A practical, deep web fundamentals lesson: understand HTTP methods, status codes, headers, secure cookie attributes, session management, TLS basics, and how web servers and proxies interact. Defenders must know these to write effective controls.
+
+Modules:
+1) HTTP mechanics — requests, responses, headers, methods.
+2) TLS & certificates — chain validation, common deployment mistakes.
+3) Session management — cookies vs tokens, secure flags, session rotation.
+4) Reverse proxies, load balancers, and real-world deployment patterns.
+5) Security headers and best-practices (HSTS, CSP, X-Frame-Options).
+
+Exercises:
+- Inspect example HTTP logs and identify missing security headers.`,
+      quiz:{ id:'Q4', questions:[
+        { q:'A secure session cookie should include:', choices:['HttpOnly & Secure','SameSite=None & no flags','Be accessible to JS'], a:0 },
+        { q:'HSTS enforces:', choices:['Client-side HTTPS enforcement','Server-side only','CDN usage'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L5-Crypto',
+      title:'Cryptography Concepts for Practitioners',
+      summary:'High-level cryptography: hashes, symmetric/asymmetric, TLS, key management (non-math heavy).',
+      hours:8,
+      content:
+`This long conceptual lesson focuses on practical cryptography without deep math: which algorithms to use, how to manage keys, TLS deployment pitfalls, and why naive schemes fail in production.
+
+Modules:
+1) Hashes and integrity checks — appropriate use cases and common misuse.
+2) Symmetric vs asymmetric crypto — when to use each and secure key handling.
+3) TLS: ciphers, renegotiation, certificate validation problems.
+4) Key rotation, storage, and vault strategies.
+
+Exercises:
+- Create a short plan to rotate keys for a web application and how to store secrets securely.`,
+      quiz:{ id:'Q5', questions:[
+        { q:'SHA-1 for new systems is:', choices:['Recommended','Deprecated','Mandatory'], a:1 },
+        { q:'Private keys should be:', choices:['Committed to source','Stored securely in a vault','Shared with all devs'], a:1 }
+      ]}
+    },
+
+    {
+      id:'L6-Recon',
+      title:'Reconnaissance & OSINT (Ethical)',
+      summary:'Passive and active reconnaissance, OSINT tools, footprinting ethically.',
+      hours:10,
+      content:
+`Reconnaissance is the foundation for any security assessment. This long lesson covers OSINT sources, responsible recon practices, rate-limiting considerations, and turning public info into a defensive checklist.
+
+Modules:
+1) Passive OSINT sources — DNS, certificate transparency, public repos.
+2) Active discovery — scope, rate limits, and safe scanning.
+3) Metadata analysis — what to look for and how to avoid collecting private data.
+4) Building a defensible recon report.
+
+Exercises:
+- Produce a recon summary for a public test target using only permitted sources.`,
+      quiz:{ id:'Q6', questions:[
+        { q:'OSINT should be done:', choices:['Without consent','Within legal & ethical boundaries','To access private systems'], a:1 },
+        { q:'Certificate Transparency logs help to:', choices:['Find issued certs for domains','Exploit servers','Replace DNS'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L7-Scanning',
+      title:'Scanning & Enumeration (Defensive View)',
+      summary:'Port scanning theory, fingerprinting, dealing with false positives, and safe scan practices.',
+      hours:10,
+      content:
+`Scanning at scale requires care. This lesson teaches scan methodologies, safe rate limits, interpreting results, and protecting your scan artifacts. We emphasize defender controls to detect and block malicious scans.
+
+Modules:
+1) Scanning types and ethics.
+2) Service fingerprinting and version inference.
+3) False-positive mitigation and result correlation.
+4) Tuning defensive controls to avoid blocking legitimate users.
+
+Exercises:
+- Analyze a sample scan output and identify likely services and false positives.`,
+      quiz:{ id:'Q7', questions:[
+        { q:'A responsible scan should:', choices:['Ignore rate limits','Respect scope and rate limits','Use only destructive flags'], a:1 },
+        { q:'Service fingerprinting aims to:', choices:['Identify service types/version','Exploit vulnerabilities immediately','Delete logs'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L8-WebApp-Design',
+      title:'Web Application Security — Design & Threat Modeling (Very Long)',
+      summary:'Large, multi-module lesson focused on secure design, threat modeling, and defenses.',
+      hours:36,
+      content:
+`This very long lesson is divided into multiple submodules exploring web app security from design through deployment. The focus is on detection, remediation, and secure engineering.
+
+Submodules:
+- Threat modeling & secure design — STRIDE/PASTA-style approaches to find high-value risks.
+- Input validation & canonicalization — server-side validation patterns and safe libraries.
+- Authentication, session management & MFA — secure flows and reset best-practices.
+- Authorization & business logic protections — server-side checks and test strategies.
+- Injection classes (defensive) — parameterized queries, safe API patterns.
+- XSS & content security policy — output encoding and CSP strategies.
+- File handling & uploads — validation, storage, and safe serving.
+- Error handling & logging — avoid information leakage, log with context.
+- CI/CD & dependency management — SAST/DAST, secret scanning, dependency pinning.
+- Final capstone: produce a remediation plan for a sample vulnerable app.
+
+Exercises:
+- For each submodule, write a remediation checklist and implement a code-level fix in a sandbox (in production labs).`,
+      quiz:{ id:'Q8', questions:[
+        { q:'Threat modeling helps to:', choices:['Prioritize mitigations','Avoid all testing','Make code slower'], a:0 },
+        { q:'Server-side validation should be:', choices:['Only client-side','Always enforced','Optional'], a:1 }
+      ]}
+    },
+
+    {
+      id:'L9-APISecurity',
+      title:'API & Mobile Security (High-level)',
+      summary:'Design secure REST/GraphQL APIs, token management, and mobile storage considerations.',
+      hours:12,
+      content:
+`APIs are the backbone of modern apps. This lesson covers token rotation, scope-limited tokens, common misconfigurations, mobile secure storage considerations, and API gateway patterns.
+
+Modules:
+1) REST vs GraphQL security considerations.
+2) Token-based auth, refresh tokens, and token revocation strategies.
+3) Mobile platform secure storage and OS-provided mechanisms.
+4) API rate limiting and defense-in-depth.
+
+Exercise:
+- Create a token revocation plan and describe how to implement it in a CI/CD environment.`,
+      quiz:{ id:'Q9', questions:[
+        { q:'Refresh tokens should be:', choices:['Stored insecurely','Rotated and revoked','Never used'], a:1 },
+        { q:'GraphQL exposes risk when:', choices:['Unvalidated inputs allow expensive queries','Used properly','Disabled'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L10-DefensiveMonitoring',
+      title:'Defensive Controls & Log Analysis',
+      summary:'SIEM basics, log collection, IDS/IPS concepts, alert tuning and triage.',
+      hours:14,
+      content:
+`Defensive monitoring is essential to reduce dwell time. This lesson teaches log collection strategies, use-case driven alerting, detection engineering, and incident triage playbooks.
+
+Modules:
+1) Logging best practices — what to log and what not to log.
+2) SIEM use-cases and rule creation.
+3) IDS/IPS overview and false positive management.
+4) Incident triage and playbook creation.
+
+Exercises:
+- Design an alert for suspicious lateral movement and write a triage playbook.`,
+      quiz:{ id:'Q10', questions:[
+        { q:'SIEM helps to:', choices:['Aggregate logs and detect patterns','Make servers insecure','Replace backups'], a:0 },
+        { q:'Good alerts are:', choices:['Based on use-cases and tuned','Always noisy','Impossible to get right'], a:0 }
+      ]}
+    },
+
+    // Advanced lessons 11-20 (long content continued) ...
+    {
+      id:'L11-VulnMgmt',
+      title:'Vulnerability Management & Reporting',
+      summary:'Triage, impact assessment, CVE lifecycle, and remediation verification.',
+      hours:12,
+      content:
+`Vulnerability management bridges discovery and remediation. This lesson covers how to triage findings, writing clear remediation steps, severity vs exploitability, and verification processes.
+
+Modules:
+1) Triage methodology — exploitability vs impact matrix.
+2) Writing remediation-focused reports.
+3) Patch verification and regression testing.
+4) CVE submission process and embargo handling.
+
+Exercise:
+- Triage a sample finding and write remediation steps prioritized by risk.`,
+      quiz:{ id:'Q11', questions:[
+        { q:'A strong vulnerability report includes:', choices:['Clear reproduction and remediation recommendations','Only a vague claim','Exploit code for production systems'], a:0 },
+        { q:'Severity should consider:', choices:['Impact and exploitability','Only impact','Only age'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L12-PrivEsc',
+      title:'Privilege Escalation Theory & Hardening',
+      summary:'Understanding common escalation paths and system hardening practices.',
+      hours:10,
+      content:
+`Privilege escalation often stems from misconfigurations. This lesson explains common escalation vectors, defensive mitigations, and checklist-based hardening.
+
+Modules:
+- Common misconfigurations (SUID, services, weak ACLs).
+- Principle of least privilege and role design.
+- Hardening checklists and monitoring for abuse.
+
+Exercise:
+- Review a configuration and propose a prioritized hardening plan.`,
+      quiz:{ id:'Q12', questions:[
+        { q:'Principle of least privilege reduces:', choices:['Attack surface and damage','Usability only','Nothing'], a:0 },
+        { q:'Hardening frequently includes:', choices:['Removing unnecessary services','Adding more default accounts','Disabling logs'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L13-NetworkEx',
+      title:'Network Exploitation Concepts (Defensive Focus)',
+      summary:'Lateral movement detection, segmentation, and containment strategies.',
+      hours:12,
+      content:
+`While offensive concepts are discussed at a high-level, defenders need to recognize lateral movement and implement containment. This long lesson covers defensive detection techniques and segmentation patterns.
+
+Modules:
+1) Detection patterns for lateral movement.
+2) Network segmentation and microsegmentation.
+3) Containment and playbooks.
+
+Exercise:
+- Draft a segmentation plan reducing attack surface for a web application environment.`,
+      quiz:{ id:'Q13', questions:[
+        { q:'Network segmentation helps to:', choices:['Limit attacker movement','Expose more services','Reduce logs'], a:0 },
+        { q:'Detection of lateral movement often uses:', choices:['Process and auth logs correlation','Only firewall rules','No logs'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L14-RedTeam',
+      title:'Red Team Fundamentals (Conceptual & Ethical)',
+      summary:'Engagement planning, rules of engagement, and reporting (no exploit recipes).',
+      hours:16,
+      content:
+`Red teaming tests an organization's detection and response. This long lesson focuses on planning, safe execution, and reporting with an emphasis on improving defenses.
+
+Modules:
+- Engagement scoping and safety controls.
+- Detection goals and metrics for success.
+- Post-engagement reporting and remediation validation.
+
+Exercise:
+- Create a tabletop exercise and measure detection improvements.`,
+      quiz:{ id:'Q14', questions:[
+        { q:'Rules of engagement define:', choices:['Scope and allowed actions','How to publish exploits','Which systems to hack publicly'], a:0 },
+        { q:'Red team success metrics should include:', choices:['Detection and response measures','Only whether a breach occurred','Financial gain'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L15-Cloud',
+      title:'Cloud Security (AWS/Azure/GCP — Defensive)',
+      summary:'Cloud threat models, IAM best-practices, secure IaC, and tenant hardening.',
+      hours:18,
+      content:
+`Cloud introduces new threat models. This long lesson covers IAM, least-privilege in the cloud, secure infrastructure-as-code, and how to instrument cloud environments for detection.
+
+Modules:
+- Cloud identity and access management.
+- Secure IaC patterns and drift prevention.
+- Instrumentation: cloud logs and detection.
+- Shared-responsibility model & secure deployment.
+
+Exercise:
+- Produce an IAM policy minimizing privileges for a sample workload.`,
+      quiz:{ id:'Q15', questions:[
+        { q:'Cloud IAM best-practice is:', choices:['Grant broad admin rights','Use least privilege and roles','Share root credentials'], a:1 },
+        { q:'Infrastructure as Code should be:', choices:['Monitored for drift and secrets','Never reviewed','Only used in prod'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L16-AppSecEngineering',
+      title:'Application Security Engineering & SDLC',
+      summary:'Secure SDLC, SAST/DAST, code review checklists, and integrating security in dev workflows.',
+      hours:16,
+      content:
+`Integrating security into engineering workflows reduces vulnerabilities earlier. This long lesson covers threat modeling in sprints, code review checklists, and automated checks in CI.
+
+Modules:
+- Secure SDLC stages and champions.
+- SAST vs DAST vs dependency scanning.
+- Code review guidelines and automation.
+
+Exercise:
+- Draft a secure code review checklist for your team.`,
+      quiz:{ id:'Q16', questions:[
+        { q:'SAST runs on:', choices:['Source code','Live traffic','User sessions'], a:0 },
+        { q:'Security champions are:', choices:['Developers who promote secure practices','External auditors only','Obsolete roles'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L17-IoT',
+      title:'IoT & Embedded Security (Design Focus)',
+      summary:'Threat modeling for embedded devices, secure updates and supply chain considerations.',
+      hours:12,
+      content:
+`Hardware brings new constraints. This lesson explores secure update design, hardware root-of-trust concepts, and supply chain considerations with a defensive focus.
+
+Modules:
+- Secure boot and update strategies.
+- Supply chain risk management.
+- Data minimization on devices.
+
+Exercise:
+- Design a secure OTA update process outline.`,
+      quiz:{ id:'Q17', questions:[
+        { q:'Secure OTA updates require:', choices:['Signed images and rollbacks','No checks at all','Publishing private keys'], a:0 },
+        { q:'Supply chain risk includes:', choices:['Third-party component vulnerabilities','Only hardware failures','No software concerns'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L18-DetectionEngineering',
+      title:'Detection Engineering & Purple Teaming',
+      summary:'Building reliable detections, testing them with purple-team exercises, and iterating.',
+      hours:14,
+      content:
+`Detection engineering builds measurable alerts. This lesson discusses constructing detection rules, reducing false positives, and purple-team cycles to measure detection effectiveness.
+
+Modules:
+- Creating high-fidelity detections.
+- Testing detections with simulated behavior.
+- Iteration and feedback loops.
+
+Exercise:
+- Implement a mock detection and measure its false-positive rate.`,
+      quiz:{ id:'Q18', questions:[
+        { q:'High-fidelity detections aim to:', choices:['Catch real attacks with low false positives','Trigger on every event','Ignore context'], a:0 },
+        { q:'Purple team cycles help to:', choices:['Improve detection with attacker insight','Break teams','Slow development'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L19-ResearchEthics',
+      title:'Security Research & Responsible Publication',
+      summary:'How to research ethically, write safe disclosures, and publish responsibly.',
+      hours:10,
+      content:
+`Publishing research helps the community but must be done responsibly. This lesson covers safe disclosure timelines, redaction, and coordinating with vendors.
+
+Modules:
+- Ethics of publishing vulnerabilities.
+- Redaction and responsible timelines.
+- Working with vendors and CVE authorities.
+
+Exercise:
+- Draft an ethical research disclosure plan.`,
+      quiz:{ id:'Q19', questions:[
+        { q:'Responsible publication often includes:', choices:['Vendor coordination and redaction','Immediate exploit release','Selling details'], a:0 },
+        { q:'CVE assignment helps to:', choices:['Standardize tracking of vulnerabilities','Hide issues','Prevent fixes'], a:0 }
+      ]}
+    },
+
+    {
+      id:'L20-Capstone',
+      title:'Capstone: Defensive Program Design',
+      summary:'Design a defensible program integrating lessons learned and measurable metrics.',
+      hours:20,
+      content:
+`Capstone challenge: build a defensible security program for a hypothetical company. Include threat models, detection plans, hardening checklists, and training/metrics to measure success.
+
+Deliverables:
+- Threat model & prioritized mitigation backlog.
+- Detection & response playbook for a selected threat.
+- Patch & deployment hardening checklist.
+- Training plan for dev teams.
+
+This capstone synthesizes the entire curriculum into a practical program.`,
+      quiz:{ id:'Q20', questions:[
+        { q:'A defensible program includes:', choices:['Detection, response, and prevention','Only prevention','Only audits'], a:0 },
+        { q:'Measurable security metrics help to:', choices:['Track improvement and ROI','Hide performance','Avoid change'], a:0 }
+      ]}
+    }
+  ];
+
+  /* ---------- Storage & Auth utils ---------- */
+  function loadAccounts(){ try{return JSON.parse(localStorage.getItem('cldc_accounts')||'{}')}catch(e){return{}} }
+  function saveAccounts(obj){ localStorage.setItem('cldc_accounts', JSON.stringify(obj)) }
+  function getLogged(){ return localStorage.getItem('cldc_logged') || null }
+  function setLogged(email){ localStorage.setItem('cldc_logged', email); renderProfile(); }
+  function clearLogged(){ localStorage.removeItem('cldc_logged'); renderProfile(); }
+
+  function esc(s){ return String(s||'').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[ch])); }
+
+  /* ---------- Render lesson list & featured ---------- */
+  const lessonListEl = document.getElementById('lesson-list');
+  const featuredEl = document.getElementById('featured');
+  const quizListEl = document.getElementById('quiz-list');
+
+  function renderLessons(){
+    lessonListEl.innerHTML = '';
+    LESSONS.forEach(l => {
+      const div = document.createElement('div');
+      div.className = 'lesson-item';
+      div.innerHTML = `<div>
+          <strong>${esc(l.title)}</strong>
+          <div class="small">${esc(l.summary)} · ${l.hours} hrs</div>
         </div>
-      </div>
-    `;
-    container.appendChild(item);
+        <div class="lesson-actions">
+          <div class="small">${l.modules ? l.modules.length : '—'} modules</div>
+          <div style="display:flex;gap:6px">
+            <button class="pill" onclick="openLesson('${l.id}')">Open</button>
+            <button class="pill" onclick="enroll('${l.id}')">Enroll</button>
+          </div>
+        </div>`;
+      lessonListEl.appendChild(div);
+    });
+
+    // featured (first three)
+    featuredEl.innerHTML = '';
+    LESSONS.slice(0,3).forEach(l => {
+      const c = document.createElement('div');
+      c.className = 'card'; c.style.marginTop='10px';
+      c.innerHTML = `<strong>${esc(l.title)}</strong><div class="small" style="margin-top:6px">${esc(l.summary)}</div><div style="margin-top:8px"><button class="btn" onclick="openLesson('${l.id}')">Open Lesson</button></div>`;
+      featuredEl.appendChild(c);
+    });
+
+    // quizzes list
+    quizListEl.innerHTML = '';
+    LESSONS.forEach((l, idx) => {
+      if(!l.quiz || !l.quiz.id) {
+        // lessons may still have quiz as defined above
+      }
+      const qdiv = document.createElement('div');
+      qdiv.className = 'lesson-item';
+      qdiv.innerHTML = `<div><strong>Quiz ${idx+1}: ${esc(l.title)}</strong><div class="small">${esc(l.summary)}</div></div><div style="display:flex;gap:6px"><button class="pill" onclick="openQuiz('${l.id}')">Take Quiz</button></div>`;
+      quizListEl.appendChild(qdiv);
+    });
+  }
+  renderLessons();
+
+  /* ---------- Enrollment & profile ---------- */
+  function enroll(lessonId){
+    const user = getLogged();
+    if(!user){ alert('Please sign in to enroll.'); return; }
+    const accounts = loadAccounts();
+    accounts[user].enrolled = accounts[user].enrolled || [];
+    if(!accounts[user].enrolled.includes(lessonId)){ accounts[user].enrolled.push(lessonId); saveAccounts(accounts); alert('Enrolled: ' + lessonId); renderProfile(); }
+    else alert('Already enrolled.');
+  }
+
+  function renderProfile(){
+    const out = document.getElementById('profileSummary');
+    const logged = getLogged();
+    if(!logged){ out.innerHTML = 'Not signed in'; return; }
+    const accounts = loadAccounts();
+    const user = accounts[logged];
+    if(!user){ out.innerHTML = 'Not signed in'; return; }
+    const completed = (user.completed||[]).length;
+    const enrolled = (user.enrolled||[]).length;
+    out.innerHTML = `<strong>${esc(user.name)}</strong><div class="small">${esc(user.email)}</div><div style="margin-top:8px" class="small">Enrolled: ${enrolled} · Completed modules: ${completed} · <button class="pill" onclick="signOut()">Sign out</button></div>`;
+  }
+  function signOut(){ clearLogged(); alert('Signed out'); }
+
+  /* ---------- SPA navigation ---------- */
+  document.querySelectorAll('nav .nav-btn').forEach(btn => btn.addEventListener('click', ()=> navigateTo(btn.dataset.target)));
+  function navigateTo(id){ document.querySelectorAll('section.app-section').forEach(s=> s.classList.remove('active')); const el=document.getElementById(id); if(el) el.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+
+  /* CTA */
+  document.getElementById('cta-enroll').addEventListener('click', ()=> { if(!getLogged()){ document.getElementById('btn-signup').click(); return; } navigateTo('lessons'); });
+
+  /* ---------- Quick sign up / password strength ---------- */
+  document.getElementById('quick-signup').addEventListener('submit', e=>{
+    e.preventDefault();
+    const name = document.getElementById('qs-name').value.trim();
+    const email = document.getElementById('qs-email').value.trim().toLowerCase();
+    const pass = document.getElementById('qs-pass').value;
+    if(!name||!email||!pass){ alert('Fill all fields'); return; }
+    const acc = loadAccounts();
+    if(acc[email]){ alert('Account exists'); return; }
+    acc[email] = { name, email, password:pass, completed:[], enrolled:[] };
+    saveAccounts(acc);
+    setLogged(email);
+    alert('Account created and signed in');
   });
 
-  // wire accordion heads
-  $$('.acc-head').forEach(h => h.addEventListener('click', ()=>{
-    const body = h.nextElementSibling;
-    const open = body.style.display === 'block';
-    $$('.acc-body').forEach(b => b.style.display = 'none');
-    if(!open) body.style.display = 'block';
-  }));
+  function passwordStrength(pw){
+    if(!pw) return {score:0,label:'—'};
+    let s=0; if(pw.length>=8) s++; if(/[a-z]/.test(pw)&&/[A-Z]/.test(pw)) s++; if(/[0-9]/.test(pw)) s++; if(/[^A-Za-z0-9]/.test(pw)) s++;
+    const labels=['Very weak','Weak','Okay','Strong','Very strong']; return {score:s,label:labels[s]||'Very weak'};
+  }
+  document.getElementById('qs-pass').addEventListener('input', e => { document.getElementById('pw-strength').innerText = 'Strength: ' + passwordStrength(e.target.value).label; });
 
-  // wire complete buttons
-  $$('.completeLesson').forEach(btn => btn.addEventListener('click', (e)=>{
-    const idx = Number(e.target.dataset.idx);
-    // optional: require previous completion
-    if(idx>0 && !lessonsState.completed.includes(idx-1) && !lessonsState.completed.includes(idx)){
-      alert('Finish previous lessons first.');
+  /* ---------- Sign in / Sign up buttons open an overlay lessonView used as auth area (SPA) ---------- */
+  document.getElementById('btn-signup').addEventListener('click', ()=> openAuth('signup'));
+  document.getElementById('btn-login').addEventListener('click', ()=> openAuth('signin'));
+
+  function openAuth(mode){
+    // show lessonView and inject a small auth form
+    const view = document.getElementById('lessonView');
+    view.style.display='block';
+    view.setAttribute('aria-hidden','false');
+    document.getElementById('lv-title').innerText = (mode==='signup')? 'Sign Up' : 'Sign In';
+    document.getElementById('lv-summary').innerText = '';
+    document.getElementById('lv-content').innerHTML = `<div class="card"><form id="auth-form">
+      ${mode==='signup'?'<input id="auth-name" placeholder="Full name" required />':''}
+      <input id="auth-email" type="email" placeholder="Email" required />
+      <input id="auth-pass" type="password" placeholder="Password" required />
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" type="submit">${mode==='signup'?'Create Account':'Sign In'}</button>
+        <button type="button" class="pill" id="auth-cancel">Cancel</button>
+        ${mode==='signin'?'<button type="button" class="pill" id="auth-forgot">Forgot</button>':''}
+      </div></form></div>`;
+    document.getElementById('lv-close').onclick = ()=> { view.style.display='none'; view.setAttribute('aria-hidden','true'); };
+    document.getElementById('auth-cancel').addEventListener('click', ()=> { view.style.display='none'; view.setAttribute('aria-hidden','true'); });
+
+    if(mode==='signup'){
+      document.getElementById('auth-form').addEventListener('submit', e=>{
+        e.preventDefault();
+        const name = document.getElementById('auth-name').value.trim();
+        const email = document.getElementById('auth-email').value.trim().toLowerCase();
+        const pass = document.getElementById('auth-pass').value;
+        if(!name||!email||!pass){ alert('Fill all fields'); return; }
+        const acc = loadAccounts();
+        if(acc[email]){ alert('Account exists'); return; }
+        acc[email] = { name, email, password:pass, completed:[], enrolled:[] };
+        saveAccounts(acc);
+        setLogged(email);
+        alert('Account created and signed in');
+        view.style.display='none'; view.setAttribute('aria-hidden','true');
+      });
+    } else {
+      document.getElementById('auth-form').addEventListener('submit', e=>{
+        e.preventDefault();
+        const email = document.getElementById('auth-email').value.trim().toLowerCase();
+        const pass = document.getElementById('auth-pass').value;
+        const acc = loadAccounts();
+        if(!acc[email] || acc[email].password !== pass){ alert('Invalid credentials'); return; }
+        setLogged(email);
+        alert('Signed in');
+        view.style.display='none'; view.setAttribute('aria-hidden','true');
+      });
+      document.getElementById('auth-forgot').addEventListener('click', showForgot);
+    }
+  }
+
+  function showForgot(){
+    const view = document.getElementById('lessonView'); view.style.display='block'; view.setAttribute('aria-hidden','false');
+    document.getElementById('lv-title').innerText='Forgot Password';
+    document.getElementById('lv-summary').innerText='';
+    document.getElementById('lv-content').innerHTML = `<div class="card"><form id="fp-form"><div class="small">Enter your email to receive a demo reset token (displayed). In production you'd email it.</div><input id="fp-email" type="email" placeholder="Email" required /><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" type="submit">Send Token</button><button type="button" class="pill" id="fp-cancel">Cancel</button></div></form></div>`;
+    document.getElementById('fp-cancel').addEventListener('click', ()=> { view.style.display='none'; view.setAttribute('aria-hidden','true'); });
+    document.getElementById('fp-form').addEventListener('submit', e=>{
+      e.preventDefault();
+      const email = document.getElementById('fp-email').value.trim().toLowerCase();
+      const acc = loadAccounts();
+      if(!acc[email]){ alert('No account found'); return; }
+      const token = Math.random().toString(36).slice(2,9).toUpperCase();
+      acc[email].resetToken = token; saveAccounts(acc);
+      alert('Demo reset token: ' + token + '\\nUse Reset password to set a new password.');
+      showReset(email);
+    });
+  }
+
+  function showReset(prefill){
+    const view = document.getElementById('lessonView'); view.style.display='block'; view.setAttribute('aria-hidden','false');
+    document.getElementById('lv-title').innerText='Reset Password';
+    document.getElementById('lv-summary').innerText='';
+    document.getElementById('lv-content').innerHTML = `<div class="card"><form id="rt-form"><input id="rt-email" type="email" value="${esc(prefill||'')}" required /><input id="rt-token" placeholder="Token" required /><input id="rt-pass" type="password" placeholder="New password" required /><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" type="submit">Reset</button><button type="button" class="pill" id="rt-cancel">Cancel</button></div></form></div>`;
+    document.getElementById('rt-cancel').addEventListener('click', ()=> { view.style.display='none'; view.setAttribute('aria-hidden','true'); });
+    document.getElementById('rt-form').addEventListener('submit', e=>{
+      e.preventDefault();
+      const em = document.getElementById('rt-email').value.trim().toLowerCase();
+      const tkn = document.getElementById('rt-token').value.trim();
+      const np = document.getElementById('rt-pass').value;
+      const acc = loadAccounts();
+      if(!acc[em] || acc[em].resetToken !== tkn){ alert('Invalid token or email'); return; }
+      acc[em].password = np; delete acc[em].resetToken; saveAccounts(acc);
+      alert('Password reset - sign in with new password.');
+      view.style.display='none'; view.setAttribute('aria-hidden','true');
+    });
+  }
+
+  /* ---------- Discussion global ---------- */
+  function loadDiscussion(){ try{return JSON.parse(localStorage.getItem('cldc_discussion')||'[]')}catch(e){return[]} }
+  function saveDiscussion(arr){ localStorage.setItem('cldc_discussion', JSON.stringify(arr)) }
+  function renderGlobalDiscussion(){
+    const el = document.getElementById('globalDiscussion'); el.innerHTML='';
+    const posts = loadDiscussion();
+    posts.slice().reverse().forEach(p => {
+      const d = document.createElement('div'); d.className='post';
+      d.innerHTML = `<div style="display:flex;justify-content:space-between"><strong>${esc(p.title)}</strong><div class="small">${esc(p.by)} · ${new Date(p.date).toLocaleString()}</div></div><div class="small" style="margin-top:6px">${esc(p.body)}</div>`;
+      el.appendChild(d);
+    });
+  }
+  document.getElementById('globalPostForm').addEventListener('submit', e=> {
+    e.preventDefault();
+    const t = document.getElementById('post-title').value.trim(); const b = document.getElementById('post-body').value.trim();
+    if(!t||!b) return alert('Fill both fields');
+    const posts = loadDiscussion(); posts.push({title:t, body:b, by: getLogged()? loadAccounts()[getLogged()].name : 'Guest', date: new Date().toISOString()}); saveDiscussion(posts);
+    document.getElementById('post-title').value=''; document.getElementById('post-body').value=''; renderGlobalDiscussion();
+  });
+  function clearDiscussion(){ if(confirm('Clear all discussion posts?')){ saveDiscussion([]); renderGlobalDiscussion(); } }
+  renderGlobalDiscussion();
+
+  /* ---------- Lesson opening / full-screen ---------- */
+  const lessonView = document.getElementById('lessonView');
+  const lvTitle = document.getElementById('lv-title');
+  const lvSummary = document.getElementById('lv-summary');
+  const lvContent = document.getElementById('lv-content');
+  const lvClose = document.getElementById('lv-close');
+  const lvProgressText = document.getElementById('lv-progress-text');
+  const lvProgressBar = document.getElementById('lv-progress-bar');
+
+  lvClose.addEventListener('click', ()=> { lessonView.style.display='none'; lessonView.setAttribute('aria-hidden','true'); });
+
+  function openLesson(lessonId){
+    const lesson = LESSONS.find(x => x.id === lessonId);
+    if(!lesson) return alert('Lesson not found');
+    lessonView.style.display='block'; lessonView.setAttribute('aria-hidden','false');
+    lvTitle.innerText = lesson.title; lvSummary.innerText = lesson.summary;
+    // build long content - include the whole lesson.content text and submodules if any
+    let html = `<div class="card"><strong>Estimated time:</strong> <span class="small">${lesson.hours} hours (approx)</span><div style="margin-top:10px;white-space:pre-wrap" class="small">${esc(lesson.content)}</div></div>`;
+    // Add modules or submodules if structured (some lessons include multi-submodule content inside content)
+    // For our data, content includes submodule narrative; still, allow marking completion per 'pseudo-module'
+    // We'll derive module units: split content by newline headings (simple heuristic)
+    const units = deriveUnits(lesson);
+    html += `<div style="margin-top:12px">${units.map(u => `<div class="module"><div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${esc(u.title)}</strong><div class="small" style="margin-top:6px;white-space:pre-wrap">${esc(u.body)}</div></div><div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end"><button class="pill" onclick="openModule('${lesson.id}','${u.id}')">Open</button><button class="pill" onclick="toggleComplete('${lesson.id}::${u.id}')">${isDone(lesson.id + '::' + u.id)?'Mark undone':'Mark done'}</button></div></div></div>`).join('')}</div>`;
+
+    // Quiz link for this lesson
+    html += `<div style="margin-top:12px" class="card"><strong>Lesson Quiz</strong><div class="small" style="margin-top:8px">${esc(lesson.summary)}</div><div style="margin-top:8px"><button class="btn" onclick="openQuiz('${lesson.id}')">Take Quiz</button></div></div>`;
+
+    lvContent.innerHTML = html;
+
+    // discussion rendering
+    renderLessonDiscussion(lesson.id);
+    document.getElementById('lv-post-form').onsubmit = (e) => { e.preventDefault(); const t=document.getElementById('lv-post-title').value.trim(), b=document.getElementById('lv-post-body').value.trim(); if(!t||!b) return alert('Fill both fields'); addLessonPost(lesson.id,t,b); document.getElementById('lv-post-title').value=''; document.getElementById('lv-post-body').value=''; renderLessonDiscussion(lesson.id); };
+    document.getElementById('lv-clear-posts').onclick = ()=> { if(confirm('Clear lesson posts?')){ clearLessonPosts(lesson.id); renderLessonDiscussion(lesson.id); }};
+
+    updateLessonProgress(lesson.id);
+  }
+
+  // simple deriveUnits: split content into paragraphs and make few units (heuristic)
+  function deriveUnits(lesson){
+    // If lesson has explicit submodules in data (e.g., lesson.submodules), use them
+    if(lesson.submodules) return lesson.submodules.map((s,i)=> ({ id: (s.id||('m'+i)), title: s.title||('Module '+(i+1)), body: s.body||'' }));
+    // else split by double newlines into 3 units
+    const parts = String(lesson.content||'').split('\n\n').filter(p=>p.trim()).slice(0,6);
+    return parts.map((p,i)=> ({ id:'u'+(i+1), title:'Part '+(i+1), body:p }));
+  }
+
+  function openModule(lessonId, unitId){
+    // open a focused module view within the lessonView
+    const unitKey = `${lessonId}::${unitId}`;
+    const unitDone = isDone(unitKey);
+    const area = lvContent;
+    // find unit text from deriveUnits
+    const lesson = LESSONS.find(x=>x.id===lessonId); if(!lesson) return;
+    const unit = deriveUnits(lesson).find(u=>u.id===unitId) || {title:unitId, body:''};
+    area.innerHTML = `<div class="card"><strong>${esc(unit.title)}</strong><div class="small" style="margin-top:8px;white-space:pre-wrap">${esc(unit.body)}</div>
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="btn" id="mod-toggle">${unitDone? 'Mark undone':'Mark done'}</button>
+        <button class="pill" id="mod-lab">Practice Lab</button>
+        <button class="pill" id="mod-back">Back to lesson</button>
+      </div>
+      <div id="mod-area" style="margin-top:12px"></div>
+    </div>`;
+    document.getElementById('mod-back').addEventListener('click', ()=> openLesson(lessonId));
+    document.getElementById('mod-toggle').addEventListener('click', ()=> { toggleComplete(unitKey); openModule(lessonId, unitId); updateLessonProgress(lessonId); });
+    document.getElementById('mod-lab').addEventListener('click', ()=> {
+      const a = document.getElementById('mod-area');
+      a.innerHTML = `<div class="card"><strong>Practice Lab (demo)</strong><div class="small" style="margin-top:6px">This is a sandbox placeholder for lab work. In production labs are isolated containers or VMs.</div><textarea id="lab-note" rows="4" placeholder="Write remediation notes or observations..." style="width:100%;margin-top:8px"></textarea><div style="margin-top:8px;display:flex;gap:8px"><button class="btn" id="lab-save">Save Note</button></div></div>`;
+      document.getElementById('lab-save').addEventListener('click', ()=> { const note=document.getElementById('lab-note').value.trim(); if(!note) return alert('Write something'); saveLabNote(unitKey, note); alert('Lab note saved (demo).'); });
+    });
+  }
+
+  /* ---------- Simple progress storage ---------- */
+  function saveLabNote(key, note){
+    const user = getLogged(); if(!user) return alert('Sign in to save labs');
+    const acc = loadAccounts(); acc[user].labs = acc[user].labs || {}; acc[user].labs[key] = acc[user].labs[key] || []; acc[user].labs[key].push({note,date:new Date().toISOString()}); saveAccounts(acc);
+  }
+
+  function toggleComplete(key){
+    const user = getLogged(); if(!user) return alert('Sign in to track progress');
+    const acc = loadAccounts(); acc[user].completed = acc[user].completed||[]; const idx = acc[user].completed.indexOf(key); if(idx>=0) acc[user].completed.splice(idx,1); else acc[user].completed.push(key); saveAccounts(acc);
+  }
+  function isDone(key){
+    const user = getLogged(); if(!user) return false; const acc = loadAccounts(); return (acc[user].completed||[]).includes(key);
+  }
+
+  function updateLessonProgress(lessonId){
+    const lesson = LESSONS.find(l=>l.id===lessonId); if(!lesson) return;
+    const units = deriveUnits(lesson);
+    const total = units.length;
+    const user = getLogged();
+    let done = 0;
+    if(user){
+      const acc = loadAccounts();
+      units.forEach(u => { if(acc[user].completed && acc[user].completed.includes(lessonId+'::'+u.id)) done++; });
+    }
+    const pct = Math.round((done/Math.max(total,1))*100);
+    lvProgressText.innerText = `${done}/${total} modules complete (${pct}%)`;
+    lvProgressBar.style.width = pct + '%';
+    document.getElementById('lv-progress').innerText = `Progress: ${pct}%`;
+    renderProfile();
+  }
+
+  /* ---------- Lesson discussion storage ---------- */
+  function lessonKey(lessonId){ return 'cldc_lesson_posts_' + lessonId; }
+  function loadLessonPosts(lessonId){ try{return JSON.parse(localStorage.getItem(lessonKey(lessonId))||'[]')}catch(e){return[]} }
+  function saveLessonPosts(lessonId, arr){ localStorage.setItem(lessonKey(lessonId), JSON.stringify(arr)) }
+  function addLessonPost(lessonId, title, body){ const arr = loadLessonPosts(lessonId); arr.push({title,body,by:getLogged()? loadAccounts()[getLogged()].name : 'Guest',date:new Date().toISOString()}); saveLessonPosts(lessonId,arr); }
+  function clearLessonPosts(lessonId){ saveLessonPosts(lessonId, []); }
+  function renderLessonDiscussion(lessonId){
+    const container = document.getElementById('lv-discussion'); if(!container) return;
+    const posts = loadLessonPosts(lessonId);
+    container.innerHTML = '';
+    posts.slice().reverse().forEach(p => {
+      const n = document.createElement('div'); n.className='post'; n.innerHTML = `<div style="display:flex;justify-content:space-between"><strong>${esc(p.title)}</strong><div class="small">${esc(p.by)} · ${new Date(p.date).toLocaleString()}</div></div><div class="small" style="margin-top:6px">${esc(p.body)}</div>`;
+      container.appendChild(n);
+    });
+  }
+
+  /* ---------- Quizzes: one per lesson (20) ---------- */
+  // LESSONS already include .quiz objects where defined; ensure all 20 have quiz definitions (we added earlier)
+  // openQuiz renders the quiz and grades answers
+  function openQuiz(lessonId){
+    const lesson = LESSONS.find(l => l.id === lessonId);
+    if(!lesson) return alert('Quiz not found');
+    lessonView.style.display='block'; lessonView.setAttribute('aria-hidden','false');
+    lvTitle.innerText = 'Quiz: ' + lesson.title; lvSummary.innerText = lesson.summary;
+    // render quiz
+    const quiz = lesson.quiz;
+    if(!quiz || !quiz.questions || !quiz.questions.length){
+      lvContent.innerHTML = `<div class="card"><strong>No quiz available</strong><div class="small">This lesson has no auto-graded quiz in the demo.</div></div>`;
       return;
     }
-    if(!lessonsState.completed.includes(idx)) lessonsState.completed.push(idx);
-    saveAll();
-    document.getElementById(`lessonStatus${idx}`).textContent = 'Completed';
-    e.target.textContent = 'Completed';
-    updateProgress();
-  }));
-  document.getElementById('totalLessons').textContent = LESSONS.length;
-}
-renderLessons();
-
-/* ========== PROGRESS ======== */
-function updateProgress(){
-  const total = LESSONS.length;
-  const done = lessonsState.completed.length;
-  const pct = Math.round((done/total)*100);
-  $('#overallProgress').style.width = pct + '%';
-  $('#progressText').textContent = pct + '%';
-  $('#doneCount').textContent = done;
-  saveAll();
-}
-updateProgress();
-
-/* ========== FUN FACTS (10 shown, template to add to 50) ========== */
-const FUNFACTS = [
-  "1972: Pong popularized arcade gaming.",
-  "1978: Space Invaders helped create arcade culture.",
-  "1983: The video game crash reshaped the industry.",
-  "1985: The NES revived console gaming.",
-  "1991: Sonic introduced high-speed platforming.",
-  "1993: Doom popularized the first-person shooter.",
-  "1994: PlayStation opened the CD-era of games.",
-  "1996: Pokemon began its global journey.",
-  "2001: Halo influenced modern console shooters.",
-  "2004: World of Warcraft popularized subscription MMOs."
-];
-// render fun facts
-$('#funFacts').innerHTML = FUNFACTS.map((t,i)=>`<div class="fun-item"><strong>${i+1}.</strong> ${t}</div>`).join('');
-$('#tipOut').textContent = FUNFACTS[new Date().getDate() % FUNFACTS.length];
-
-/* ========== QUIZ (5 sample Qs; extend by adding more objects) ========== */
-const QUIZ = [
-  {q:"What is ethical hacking?", opts:["Illegal break-in","Permission-based testing","Scamming"], a:1},
-  {q:"MFA stands for:", opts:["Multi-Factor Access","Multi-Factor Authentication","Multiple File Access"], a:1},
-  {q:"Best password practice:", opts:["Short easy pass","Use long unique passphrases","Write it on paper"], a:1},
-  {q:"Phishing is:", opts:["A network scan","A social engineering attack","A router issue"], a:1},
-  {q:"A safe place to practice offensive skills:", opts:["Live bank servers","Authorized labs only","Random public servers"], a:1}
-];
-let qState = {idx:0,score:0,shuffled:[]};
-$('#startQuizBtn').addEventListener('click', () => startQuiz());
-function startQuiz(){
-  qState.idx = 0; qState.score = 0; qState.shuffled = shuffleArray(QUIZ.slice());
-  renderQuiz();
-}
-function renderQuiz(){
-  const area = $('#quizArea'); area.innerHTML = '';
-  if(qState.idx >= qState.shuffled.length){
-    area.innerHTML = `<div class="panel"><h3>Quiz complete</h3><p class="muted">Score: ${qState.score} / ${qState.shuffled.length}</p><div style="display:flex;gap:8px"><button class="btn" id="closeQuiz">Close</button><button class="btn-primary" id="saveQuiz">Save Score</button></div></div>`;
-    $('#closeQuiz').onclick = ()=> area.innerHTML = '';
-    $('#saveQuiz').onclick = ()=> { const name = profile.cur && users[profile.cur] ? users[profile.cur].display : 'Guest-'+Math.floor(Math.random()*999); quizLeaderboard.push({name,score:qState.score,date:new Date().toISOString()}); saveAll(); alert('Score saved locally'); };
-    return;
-  }
-  const item = qState.shuffled[qState.idx];
-  let html = `<div class="panel"><strong>Q${qState.idx+1}.</strong> ${item.q}<div style="height:8px"></div>`;
-  item.opts.forEach((o,i)=> html += `<button class="option-btn" data-i="${i}">${String.fromCharCode(65+i)}. ${o}</button>`);
-  html += `</div>`; area.innerHTML = html;
-  $$('.option-btn').forEach(b => b.addEventListener('click', (e)=>{
-    const ans = Number(e.target.dataset.i);
-    $$('.option-btn').forEach(x=>x.disabled = true);
-    if(ans === item.a){ e.target.classList.add('correct'); qState.score++; }
-    else { e.target.classList.add('wrong'); const corr = $$('.option-btn').find(x=>Number(x.dataset.i)===item.a); if(corr) corr.classList.add('correct'); }
-    const ex = document.createElement('div'); ex.className='small muted'; ex.style.marginTop='8px'; ex.textContent = `Correct answer: ${String.fromCharCode(65+item.a)}.`; area.appendChild(ex);
-    setTimeout(()=>{ qState.idx++; renderQuiz(); }, 900);
-  }));
-}
-function shuffleArray(a){ const b = a.slice(); for(let i=b.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]] } return b; }
-
-/* ========== GAMES ========= */
-// Guess number
-let secret = rand(100) + 1;
-$('#guessNew').addEventListener('click', ()=> { secret = rand(100) + 1; $('#guessMsg').textContent = 'New number set'; });
-$('#guessBtn').addEventListener('click', ()=> {
-  const v = Number($('#guessInput').value);
-  if(!v){ $('#guessMsg').textContent = 'Enter a number'; return; }
-  if(v === secret){ $('#guessMsg').textContent = 'Correct!'; addGameScore('Guess',1); } else if(v < secret) $('#guessMsg').textContent = 'Too low'; else $('#guessMsg').textContent = 'Too high';
-});
-
-// Typing test
-const phrases = ["Secure your secrets with strong passphrases.","Practice safely in authorized labs only.","Backups save time and headaches.","Update software regularly for security."];
-let typingTimer = null, typingTime = 15;
-$('#startTypingBtn').addEventListener('click', ()=>{
-  typingTime = 15;
-  $('#typePhrase').textContent = phrases[rand(phrases.length)];
-  $('#typeInput').disabled = false; $('#typeInput').value=''; $('#typeInput').focus();
-  $('#typingResult').textContent = typingTime + 's';
-  clearInterval(typingTimer);
-  typingTimer = setInterval(()=>{ typingTime--; $('#typingResult').textContent = typingTime + 's'; if(typingTime<=0){ clearInterval(typingTimer); $('#typeInput').disabled=true; const words = ($('#typeInput').value||'').trim().split(/\s+/).filter(Boolean).length; $('#typingResult').textContent = words + ' w'; addGameScore('Typing', words); } },1000);
-});
-
-// Memory match
-let memValues = [], memOpen = [], memMatched = [];
-function setupMemory(){
-  const icons = ['♠','♥','♦','♣','★','☼','☯','♫','✈','☢','✦','☾','✿','✪','⚡','✿'];
-  memValues = shuffleArray(icons).slice(0,8);
-  memValues = shuffleArray(memValues.concat(memValues));
-  memOpen=[]; memMatched=[];
-  renderMemory();
-}
-function renderMemory(){
-  $('#memGrid').innerHTML = memValues.map((v,i)=> `<div class="panel center" style="min-height:56px;cursor:pointer" data-i="${i}">${ memMatched.includes(i) ? v : (memOpen.includes(i) ? v : '') }</div>`).join('');
-  $$('#memGrid [data-i]').forEach(d=>{
-    d.addEventListener('click', ()=>{
-      const idx = Number(d.dataset.i);
-      if(memMatched.includes(idx) || memOpen.includes(idx)) return;
-      memOpen.push(idx); renderMemory();
-      if(memOpen.length===2){
-        const [a,b] = memOpen;
-        if(memValues[a] === memValues[b]){ memMatched.push(a,b); memOpen = []; $('#memMatches').textContent = memMatched.length/2; if(memMatched.length === memValues.length){ addGameScore('Memory', memMatched.length/2); } }
-        else { setTimeout(()=>{ memOpen=[]; renderMemory(); }, 700); }
-      }
+    let html = `<div class="quiz-card"><form id="quiz-form"><div class="small">Answer the multiple-choice questions below. Immediate grading will show your score.</div><div style="margin-top:12px">`;
+    quiz.questions.forEach((q,i) => {
+      html += `<div class="quiz-question"><div><strong>Q${i+1}.</strong> ${esc(q.q)}</div>`;
+      q.choices.forEach((c,j) => { html += `<div style="margin-top:6px"><label><input type="radio" name="q${i}" value="${j}" /> ${esc(c)}</label></div>`; });
+      html += `</div>`;
     });
-  });
-}
-$('#memReset').addEventListener('click', ()=> { setupMemory(); $('#memMatches').textContent = 0; });
-setupMemory();
-
-// RPS
-$$('.rps').forEach(b=> b.addEventListener('click', (e)=>{
-  const choice = e.target.dataset.move;
-  const moves = ['rock','paper','scissors'];
-  const comp = moves[rand(3)];
-  let res='Draw';
-  if(choice===comp) res='Draw';
-  else if((choice==='rock'&&comp==='scissors')||(choice==='paper'&&comp==='rock')||(choice==='scissors'&&comp==='paper')) res='You win';
-  else res='You lose';
-  $('#rpsRes').textContent = `${res} (you: ${choice}, comp: ${comp})`;
-  if(res==='You win') addGameScore('RPS',1);
-}));
-
-// Code breaker
-let cbCode = String(100 + Math.floor(Math.random()*900));
-$('#cbNew').addEventListener('click', ()=> { cbCode = String(100 + Math.floor(Math.random()*900)); $('#cbMsg').textContent = 'New code generated'; });
-$('#cbGuess').addEventListener('click', ()=> {
-  const guess = ($('#cbInput').value||'').trim();
-  if(!/^\d{3}$/.test(guess)){ $('#cbMsg').textContent = 'Enter 3 digits'; return; }
-  if(guess === cbCode){ $('#cbMsg').textContent = 'Correct!'; addGameScore('CodeBreaker',1); return; }
-  let hint = '';
-  for(let i=0;i<3;i++){
-    if(guess[i] === cbCode[i]) hint += `${guess[i]}=✓ `;
-    else if(guess[i] < cbCode[i]) hint += `${guess[i]}< `;
-    else hint += `${guess[i]}> `;
+    html += `</div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn" type="submit">Submit Quiz</button><button type="button" class="pill" id="quiz-cancel">Cancel</button></div></form><div id="quiz-result" style="margin-top:12px"></div></div>`;
+    lvContent.innerHTML = html;
+    document.getElementById('quiz-cancel').addEventListener('click', ()=> { lessonView.style.display='none'; lessonView.setAttribute('aria-hidden','true'); });
+    document.getElementById('quiz-form').addEventListener('submit', e=> {
+      e.preventDefault();
+      let score = 0;
+      quiz.questions.forEach((q,i) => { const el = e.target[`q${i}`]; const val = el ? el.value : null; if(String(val) === String(q.a)) score++; });
+      const pct = Math.round(score / quiz.questions.length * 100);
+      document.getElementById('quiz-result').innerHTML = `<div class="card"><strong>Your result</strong><div class="small" style="margin-top:8px">${score}/${quiz.questions.length} (${pct}%)</div></div>`;
+      // store result in account if logged in
+      const user = getLogged(); if(user){ const acct = loadAccounts(); acct[user].quizResults = acct[user].quizResults || {}; acct[user].quizResults[lessonId] = {score, outOf: quiz.questions.length, pct, date:new Date().toISOString()}; saveAccounts(acct); }
+    });
   }
-  $('#cbMsg').textContent = 'Hint: ' + hint;
-});
 
-/* Game scoring & leaderboard (local) */
-function addGameScore(kind, score){
-  const name = (profile.cur && users[profile.cur]) ? users[profile.cur].display : ('Guest-'+Math.floor(Math.random()*999));
-  gamesLeaderboard.push({name,kind,score,date:new Date().toISOString()});
-  gamesLeaderboard.sort((a,b)=>b.score-a.score);
-  if(gamesLeaderboard.length>100) gamesLeaderboard.length = 100;
-  saveAll();
-}
+  /* ---------- Global helpers & init ---------- */
+  function loadAccounts(){ try{return JSON.parse(localStorage.getItem('cldc_accounts')||'{}')}catch(e){return{}} }
+  function saveAccounts(obj){ localStorage.setItem('cldc_accounts', JSON.stringify(obj)) }
+  function getLogged(){ return localStorage.getItem('cldc_logged') || null }
+  function setLogged(email){ localStorage.setItem('cldc_logged', email); renderProfile(); }
+  function clearLogged(){ localStorage.removeItem('cldc_logged'); renderProfile(); }
 
-/* ========== TOOLS ========= */
-const pre = ["Neo","Shadow","Cloud","Byte","Echo","Ghost","Nova","Zero","Drift","Flux"];
-const core = ["Root","Kernel","Cipher","Packet","Trace","Shell","Vector","Signal","Loop","Frame"];
-const suf = ["404","X","One","Sec","Ops","1337","Net","Lab"];
-$('#genName').addEventListener('click', ()=> $('#nameOut').value = pre[rand(pre.length)] + core[rand(core.length)] + suf[rand(suf.length)]);
-$('#copyName').addEventListener('click', ()=> { const t = $('#nameOut').value; if(!t) return alert('No alias'); navigator.clipboard?.writeText(t).then(()=> alert('Alias copied')); });
-$('#newTip').addEventListener('click', ()=> { $('#tipOut').textContent = FUNFACTS[rand(FUNFACTS.length)]; });
+  // fill initial demo account if none exists (optional)
+  (function ensureDemo(){
+    const acc = loadAccounts();
+    if(!Object.keys(acc).length){
+      acc['demo@cldcipher.test'] = { name:'Demo User', email:'demo@cldcipher.test', password:'DemoPass1!', completed:[], enrolled:[], labs:{}, quizResults:{} };
+      saveAccounts(acc);
+    }
+  })();
 
-// Password tester live
-$('#pwTest').addEventListener('input', ()=>{
-  const s = $('#pwTest').value; const sc = passwordScore(s); const w = Math.max(4, Math.min(100, sc));
-  $('#pwTestBar').style.width = w + '%';
-  $('#pwLabel').textContent = sc < 35 ? 'Weak' : sc < 65 ? 'Medium' : 'Strong';
-  $('#pwAdvice').textContent = sc < 35 ? 'Too weak — use 10+ chars, mix cases, numbers & symbols' : sc < 65 ? 'Okay — add length' : 'Strong — use MFA also';
-});
+  renderProfile();
 
-/* ========== PROFILE ========== */
-$('#profileBtn').addEventListener('click', ()=> {
-  if(!profile.cur){ openAuth(); return; }
-  showSection('profilePanel');
-  $('#profileDisplay').value = users[profile.cur].display;
-});
-$('#saveProfile').addEventListener('click', ()=>{
-  const cur = profile.cur;
-  if(!cur) return alert('Sign in first');
-  const newName = ($('#profileDisplay').value||'').trim();
-  const newPass = ($('#profilePass').value||'').trim();
-  if(newName) users[cur].display = newName;
-  if(newPass) users[cur].password = newPass;
-  saveAll();
-  updateProfileUI();
-  alert('Profile updated locally');
-});
-$('#signOut').addEventListener('click', ()=> { profile.cur = null; saveAll(); updateProfileUI(); alert('Signed out'); });
+  // close lessonView on Escape
+  document.addEventListener('keydown', e=> { if(e.key === 'Escape'){ lessonView.style.display='none'; lessonView.setAttribute('aria-hidden','true'); } });
 
-/* ========== INITIAL UI & bindings ========== */
-$('#openAuthBtn').addEventListener('click', openAuth);
-$('#authClose').addEventListener('click', closeAuth);
-$('#btnGotoSignUp').addEventListener('click', ()=> { showSignUp(); });
-$('#btnGotoSignIn').addEventListener('click', ()=> { showSignIn(); });
-$('#btnForgot').addEventListener('click', ()=> { /* handled above */ });
-$('#btnSkip').addEventListener('click', ()=> closeAuth());
+  // initial render of lessons and quizzes
+  renderLessons();
 
-$('#dashboardBtn').addEventListener('click', ()=> showSection('dashboard'));
-$('#navLessons').addEventListener('click', ()=> showSection('lessons'));
-$('#navQuizzes').addEventListener('click', ()=> showSection('quizzes'));
-$('#navGames').addEventListener('click', ()=> showSection('games'));
-$('#navTools').addEventListener('click', ()=> showSection('toolsPanel'));
-$('#navAbout').addEventListener('click', ()=> showSection('about'));
-
-$('#startQuizBtn').addEventListener('click', ()=> startQuiz());
-
-updateProfileUI();
-updateProgress();
-
-// Start on dashboard
-showSection('dashboard');
-
-window.addEventListener('beforeunload', saveAll);
-
-</script>
+  </script>
 </body>
 </html>
